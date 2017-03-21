@@ -40,7 +40,8 @@ def main():
     with open(sql_file_path, 'r') as sql_file:
         sql_query = sql_file.read()
 
-    dataset = pandas.read_sql(sql_query, database.truckmate.connection)
+    with database.truckmate as db:
+        dataset = pandas.read_sql(sql_query, db.connection)
     print dataset
 
 if __name__ == '__main__':
