@@ -42,6 +42,15 @@ def main():
 
     with database.truckmate as db:
         dataset = pandas.read_sql(sql_query, db.connection)
+    
+    dataset['ONTIME_APPT'] = dataset['DELIVER_BY'].dt.date < dataset['RAD']
+
+    if dataset['RAD'] > dataset['RPD'] and dataset['RPD'] > dataset['CREATED_TIME']:
+        dataset['ONTIME_APPT_REALISTIC'] = DATASET['ONTIME_APPT']
+
+    if dataset['ARRIVED']:
+        dataset['ONTIME_DELV'] = dataset['ARRIVED'] < dataset['DELIVER_BY_END']
+
     print dataset
 
 if __name__ == '__main__':
