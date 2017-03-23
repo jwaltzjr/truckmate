@@ -1,3 +1,7 @@
+# TODO / PROBLEMS
+# SEE WHY ALL ONTIME_DELV ARE COMING UP FALSE
+# SEE WHY NOTHING TO AVERAGE FOR ONTIME_APPT_REALISTIC
+
 import os
 import smtplib
 import sys
@@ -20,7 +24,7 @@ class CalcColumns(object):
 
     @staticmethod
     def ontime_appt_realistic(rad, rpd, created_date, deliver_by):
-        if (rad > rpd) & (rpd > created_date):
+        if (rad > rpd) & (rpd >= created_date):
             return deliver_by <= rad
         else:
             return None
@@ -101,11 +105,13 @@ def main():
         axis = 1
     )
 
+    print dataset
+
     print dataset['ONTIME_APPT'].mean()
     print dataset['ONTIME_APPT_REALISTIC'].mean()
     print dataset['ONTIME_DELV'].mean()
 
-    print dataset.groupby(['DELIVERY_WEEK','DELIVERY_TERMINAL'])['ONTIME_APPT'].mean()
+    print dataset.groupby(['DELIVERY_WEEK','DELIVERY_TERMINAL'])[['ONTIME_APPT','ONTIME_APPT_REALISTIC','ONTIME_DELV']].mean()
 
 if __name__ == '__main__':
     main()
