@@ -12,6 +12,22 @@ import database
 
 REPORT_EMAILS = ['jwaltzjr@krclogistics.com']
 
+class CalcColumns(object):
+
+    @staticmethod
+    def ontime_appt_realistic(rad, rpd, created_time, deliver_by):
+        if (rad > rpd) & (rpd > created_time):
+            return deliver_by < rad
+        else:
+            return None
+
+    @staticmethod
+    def ontime_delv(arrived, deliver_by_end):
+        if arrived:
+            return arrived < deliver_by_end
+        else:
+            return None
+
 def email_spreadsheet(email_addresses, spreadsheet):
     email_username = 'reports@krclogistics.com'
     email_password = 'General1'
@@ -41,18 +57,42 @@ def main():
         sql_query = sql_file.read()
 
     with database.truckmate as db:
-        dataset = pandas.read_sql(sql_query, db.connection)
-    
-    dataset['RAD'] = pandas.to_datetime(dataset['RAD'])
-    dataset['RPD'] = pandas.to_datetime(dataset['RPD'])
+        dataset = pandas.read_sql(
+            sql_query,
+            db.connection,
+            parse_dates = {
+                'RECEIVED': '%Y-%m-%d',
+                'RAD': '%Y-%m-%d',
+                'RPD': '%Y-%m-%d',
+                'DELIVER_BY': '%Y-%m-%d-%H.%M.%S.%f',
+                'DELIVER_BY_END': '%Y-%m-%d-%H.%M.%S.%f',
+                'CREATED_TIME': '%Y-%m-%d-%H.%M.%S.%f',
+                'ARRIVED': '%Y-%m-%d-%H.%M.%S.%f'
+            }
+        )
 
-    dataset['ONTIME_APPT'] = dataset['DELIVER_BY'].dt.date < dataset['RAD']
+    dataset['ONTIME_APPT'] = dataset.apply(
+        lambda row: row['DELIVER_BY'].date() < row['RAD'].date(),
+        axis = 1
+    )
 
-    if (dataset['RAD'] > dataset['RPD']) & (dataset['RPD'] > dataset['CREATED_TIME']):
-        dataset['ONTIME_APPT_REALISTIC'] = DATASET['ONTIME_APPT']
+    dataset['ONTIME_APPT_REALISTIC'] = dataset.apply(
+        lambda row: CalcColumns.ontime_appt_realistic(
+            row['RAD'],
+            row['RPD'],
+            row['CREATED_TIME'],
+            row['DELIVER_BY']
+        ),
+        axis = 1
+    )
 
-    if dataset['ARRIVED']:
-        dataset['ONTIME_DELV'] = dataset['ARRIVED'] < dataset['DELIVER_BY_END']
+    dataset['ONTIME_DELV'] = dataset.apply(
+        lambda row: CalcColumns.ontime_delv(
+            row['ARRIVED'],
+            row['DELIVER_BY_END']
+        ),
+        axis = 1
+    )
 
     print dataset
 
