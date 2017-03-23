@@ -8,7 +8,15 @@ from email.mime.application import MIMEApplication
 
 import database
 
-TONNAGE_EMAILS = ['jwaltzjr@krclogistics.com']
+TONNAGE_EMAILS = [
+    'jwaltzjr@krclogistics.com',
+    'jwaltz@krclogistics.com',
+    'dhendriksen@krclogistics.com',
+    'djdevries@krclogistics.com',
+    'tkatsahnias@krclogistics.com',
+    'ekuhowski@krclogistics.com',
+    'dpeach@krclogistics.com'
+]
 
 def fetch_data_from_db(db, query):
     with db as datab:
