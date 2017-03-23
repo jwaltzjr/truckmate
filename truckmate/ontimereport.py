@@ -15,16 +15,20 @@ REPORT_EMAILS = ['jwaltzjr@krclogistics.com']
 class CalcColumns(object):
 
     @staticmethod
-    def ontime_appt_realistic(rad, rpd, created_time, deliver_by):
-        if (rad > rpd) & (rpd > created_time):
-            return deliver_by < rad
+    def ontime_appt(delivery_date, rad):
+        return delivery_date <= rad
+
+    @staticmethod
+    def ontime_appt_realistic(rad, rpd, created_date, deliver_by):
+        if (rad > rpd) & (rpd > created_date):
+            return deliver_by <= rad
         else:
             return None
 
     @staticmethod
     def ontime_delv(arrived, deliver_by_end):
         if arrived:
-            return arrived < deliver_by_end
+            return arrived <= deliver_by_end
         else:
             return None
 
@@ -72,16 +76,19 @@ def main():
         )
 
     dataset['ONTIME_APPT'] = dataset.apply(
-        lambda row: row['DELIVER_BY'].date() < row['RAD'].date(),
+        lambda row: CalcColumns.ontime_appt(
+            row['DELIVER_BY'].date(),
+            row['RAD'].date()
+        ),
         axis = 1
     )
 
     dataset['ONTIME_APPT_REALISTIC'] = dataset.apply(
         lambda row: CalcColumns.ontime_appt_realistic(
-            row['RAD'],
-            row['RPD'],
-            row['CREATED_TIME'],
-            row['DELIVER_BY']
+            row['RAD'].date(),
+            row['RPD'].date(),
+            row['CREATED_TIME'].date(),
+            row['DELIVER_BY'].date()
         ),
         axis = 1
     )
@@ -94,7 +101,9 @@ def main():
         axis = 1
     )
 
-    print dataset
+    print dataset['ONTIME_APPT'].mean()
+    print dataset['ONTIME_APPT_REALISTIC'].mean()
+    print dataset['ONTIME_DELV'].mean()
 
 if __name__ == '__main__':
     main()
