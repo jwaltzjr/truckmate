@@ -105,5 +105,7 @@ def main():
     print dataset['ONTIME_APPT_REALISTIC'].mean()
     print dataset['ONTIME_DELV'].mean()
 
+    print dataset.groupby(['DELIVERY_WEEK','DELIVERY_TERMINAL'])['ONTIME_APPT'].mean()
+
 if __name__ == '__main__':
     main()
