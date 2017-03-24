@@ -109,12 +109,4 @@ dataset['ONTIME_DELV'] = dataset.apply(
     axis = 1
 )
 
-print dataset
-
-print dataset['ONTIME_APPT'].mean()
-print dataset['ONTIME_APPT_REALISTIC'].mean()
-print dataset['ONTIME_DELV'].mean()
-
-dataset.to_csv('ontimereport.csv')
-
 print dataset.groupby(['DELIVERY_WEEK','DELIVERY_TERMINAL'])[['ONTIME_APPT','ONTIME_APPT_REALISTIC','ONTIME_DELV']].mean()
