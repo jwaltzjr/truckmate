@@ -20,12 +20,17 @@ class CalcColumns(object):
 
     @staticmethod
     def ontime_appt(delivery_date, rad):
-        return delivery_date <= rad
+        if rad:
+            return delivery_date <= rad
+        else:
+            return True # Always on time if no due date
 
     @staticmethod
     def ontime_appt_realistic(rad, rpd, created_date, deliver_by):
         if (rad > rpd) & (rpd >= created_date):
             return deliver_by <= rad
+        elif not rad:
+            return True
         else:
             return None
 
@@ -66,29 +71,29 @@ with open(sql_file_path, 'r') as sql_file:
 with database.truckmate as db:
     dataset = pandas.read_sql(
         sql_query,
-        db.connection,
-        parse_dates = {
-            'RECEIVED': '%Y-%m-%d',
-            'RAD': '%Y-%m-%d',
-            'RPD': '%Y-%m-%d',
-            'DELIVER_BY': '%Y-%m-%d-%H.%M.%S.%f',
-            'DELIVER_BY_END': '%Y-%m-%d-%H.%M.%S.%f',
-            'CREATED_TIME': '%Y-%m-%d-%H.%M.%S.%f',
-            'ARRIVED': '%Y-%m-%d-%H.%M.%S.%f'
-        }
+        db.connection
+        # parse_dates = {
+        #     'RECEIVED': '%Y-%m-%d',
+        #     'RAD': '%Y-%m-%d',
+        #     'RPD': '%Y-%m-%d',
+        #     'DELIVER_BY': '%Y-%m-%d-%H.%M.%S.%f',
+        #     'DELIVER_BY_END': '%Y-%m-%d-%H.%M.%S.%f',
+        #     'CREATED_TIME': '%Y-%m-%d-%H.%M.%S.%f',
+        #     'ARRIVED': '%Y-%m-%d-%H.%M.%S.%f'
+        # }
     )
 
 dataset['ONTIME_APPT'] = dataset.apply(
     lambda row: CalcColumns.ontime_appt(
         row['DELIVER_BY'].date(),
-        row['RAD'].date()
+        row['RAD']
     ),
     axis = 1
 )
 
 dataset['ONTIME_APPT_REALISTIC'] = dataset.apply(
     lambda row: CalcColumns.ontime_appt_realistic(
-        row['RAD'].date(),
+        row['RAD'],
         row['RPD'].date(),
         row['CREATED_TIME'].date(),
         row['DELIVER_BY'].date()
