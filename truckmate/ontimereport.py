@@ -27,7 +27,7 @@ class CalcColumns(object):
 
     @staticmethod
     def ontime_appt_realistic(rad, rpd, created_date, deliver_by):
-        if (rad > rpd) & (rpd >= created_date):
+        if rad and rpd and (rad > rpd) & (rpd >= created_date):
             return deliver_by <= rad
         elif not rad:
             return True
@@ -94,7 +94,7 @@ dataset['ONTIME_APPT'] = dataset.apply(
 dataset['ONTIME_APPT_REALISTIC'] = dataset.apply(
     lambda row: CalcColumns.ontime_appt_realistic(
         row['RAD'],
-        row['RPD'].date(),
+        row['RPD'],
         row['CREATED_TIME'].date(),
         row['DELIVER_BY'].date()
     ),
