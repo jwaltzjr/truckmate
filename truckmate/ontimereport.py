@@ -59,59 +59,55 @@ def email_spreadsheet(email_addresses, spreadsheet):
     server.sendmail(email_username, email_addresses, email_message.as_string())
     server.quit()
 
-def main():
-    sql_file_path = os.path.join(sys.path[0], 'ontimereport.sql')
-    with open(sql_file_path, 'r') as sql_file:
-        sql_query = sql_file.read()
+sql_file_path = os.path.join(sys.path[0], 'ontimereport.sql')
+with open(sql_file_path, 'r') as sql_file:
+    sql_query = sql_file.read()
 
-    with database.truckmate as db:
-        dataset = pandas.read_sql(
-            sql_query,
-            db.connection,
-            parse_dates = {
-                'RECEIVED': '%Y-%m-%d',
-                'RAD': '%Y-%m-%d',
-                'RPD': '%Y-%m-%d',
-                'DELIVER_BY': '%Y-%m-%d-%H.%M.%S.%f',
-                'DELIVER_BY_END': '%Y-%m-%d-%H.%M.%S.%f',
-                'CREATED_TIME': '%Y-%m-%d-%H.%M.%S.%f',
-                'ARRIVED': '%Y-%m-%d-%H.%M.%S.%f'
-            }
-        )
-
-    dataset['ONTIME_APPT'] = dataset.apply(
-        lambda row: CalcColumns.ontime_appt(
-            row['DELIVER_BY'].date(),
-            row['RAD'].date()
-        ),
-        axis = 1
+with database.truckmate as db:
+    dataset = pandas.read_sql(
+        sql_query,
+        db.connection,
+        parse_dates = {
+            'RECEIVED': '%Y-%m-%d',
+            'RAD': '%Y-%m-%d',
+            'RPD': '%Y-%m-%d',
+            'DELIVER_BY': '%Y-%m-%d-%H.%M.%S.%f',
+            'DELIVER_BY_END': '%Y-%m-%d-%H.%M.%S.%f',
+            'CREATED_TIME': '%Y-%m-%d-%H.%M.%S.%f',
+            'ARRIVED': '%Y-%m-%d-%H.%M.%S.%f'
+        }
     )
 
-    dataset['ONTIME_APPT_REALISTIC'] = dataset.apply(
-        lambda row: CalcColumns.ontime_appt_realistic(
-            row['RAD'].date(),
-            row['RPD'].date(),
-            row['CREATED_TIME'].date(),
-            row['DELIVER_BY'].date()
-        ),
-        axis = 1
-    )
+dataset['ONTIME_APPT'] = dataset.apply(
+    lambda row: CalcColumns.ontime_appt(
+        row['DELIVER_BY'].date(),
+        row['RAD'].date()
+    ),
+    axis = 1
+)
 
-    dataset['ONTIME_DELV'] = dataset.apply(
-        lambda row: CalcColumns.ontime_delv(
-            row['ARRIVED'],
-            row['DELIVER_BY_END']
-        ),
-        axis = 1
-    )
+dataset['ONTIME_APPT_REALISTIC'] = dataset.apply(
+    lambda row: CalcColumns.ontime_appt_realistic(
+        row['RAD'].date(),
+        row['RPD'].date(),
+        row['CREATED_TIME'].date(),
+        row['DELIVER_BY'].date()
+    ),
+    axis = 1
+)
 
-    print dataset
+dataset['ONTIME_DELV'] = dataset.apply(
+    lambda row: CalcColumns.ontime_delv(
+        row['ARRIVED'],
+        row['DELIVER_BY_END']
+    ),
+    axis = 1
+)
 
-    print dataset['ONTIME_APPT'].mean()
-    print dataset['ONTIME_APPT_REALISTIC'].mean()
-    print dataset['ONTIME_DELV'].mean()
+print dataset
 
-    print dataset.groupby(['DELIVERY_WEEK','DELIVERY_TERMINAL'])[['ONTIME_APPT','ONTIME_APPT_REALISTIC','ONTIME_DELV']].mean()
+print dataset['ONTIME_APPT'].mean()
+print dataset['ONTIME_APPT_REALISTIC'].mean()
+print dataset['ONTIME_DELV'].mean()
 
-if __name__ == '__main__':
-    main()
+print dataset.groupby(['DELIVERY_WEEK','DELIVERY_TERMINAL'])[['ONTIME_APPT','ONTIME_APPT_REALISTIC','ONTIME_DELV']].mean()
