@@ -1,6 +1,5 @@
 # TODO / PROBLEMS
-# SEE WHY ALL ONTIME_DELV ARE COMING UP FALSE
-# SEE WHY NOTHING TO AVERAGE FOR ONTIME_APPT_REALISTIC
+# CONCAT OF FINAL DATAFRAMES CONTAINS LOTS OF NaN VALUES
 
 import os
 import smtplib
@@ -109,4 +108,20 @@ dataset['ONTIME_DELV'] = dataset.apply(
     axis = 1
 )
 
-print dataset.groupby(['DELIVERY_WEEK','DELIVERY_TERMINAL'])[['ONTIME_APPT','ONTIME_APPT_REALISTIC','ONTIME_DELV']].mean()
+dataset2 = dataset.dropna(subset = ['ONTIME_APPT_REALISTIC']).copy()
+dataset2['ONTIME_APPT_REALISTIC'] = dataset2['ONTIME_APPT_REALISTIC'].astype('bool')
+ 
+dataset3 = dataset.dropna(subset = ['ONTIME_DELV']).copy()
+dataset3['ONTIME_DELV'] = dataset3['ONTIME_DELV'].astype('bool')
+ 
+groupby = dataset.groupby(['DELIVERY_WEEK','DELIVERY_TERMINAL'])[['ONTIME_APPT']].mean()
+groupby2 = dataset2.groupby(['DELIVERY_WEEK','DELIVERY_TERMINAL'])['ONTIME_APPT_REALISTIC'].mean()
+groupby3 = dataset3.groupby(['DELIVERY_WEEK','DELIVERY_TERMINAL'])['ONTIME_DELV'].mean()
+
+print groupby
+print groupby2
+print groupby3
+
+final_result = pandas.concat([groupby, groupby2, groupby3], axis=1)
+
+print final_result
