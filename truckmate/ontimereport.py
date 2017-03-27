@@ -143,33 +143,34 @@ def create_report(data):
 
 def insert_titles_into_spreadsheet(worksheet):
     worksheet['A1'] = 'DELIVERY WEEK'
+    worksheet['A3'] = 'Appt On Time to RAD'
 
-    worksheet['A3'] = 'STAL-TERM'
-    worksheet['A4'] = 'COMM-TERM'
-    worksheet['A5'] = 'KELL-TERM'
-    worksheet['A6'] = 'LRFD-TERM'
-    worksheet['A7'] = 'FKSP-TERM'
-    worksheet['A8'] = 'UPPN-TERM'
-    worksheet['A9'] = 'UPPN2-TERM'
-    worksheet['A10'] = 'HESS-TERM'
-    worksheet['A11'] = 'HCIB-TERM'
-    worksheet['A12'] = 'BUBM-TERM'
-    worksheet['A13'] = 'RINF-TERM'
+    worksheet['A4'] = 'STAL-TERM'
+    worksheet['A5'] = 'COMM-TERM'
+    worksheet['A6'] = 'KELL-TERM'
+    worksheet['A7'] = 'LRFD-TERM'
+    worksheet['A8'] = 'FKSP-TERM'
+    worksheet['A9'] = 'UPPN-TERM'
+    worksheet['A10'] = 'UPPN2-TERM'
+    worksheet['A11'] = 'HESS-TERM'
+    worksheet['A12'] = 'HCIB-TERM'
+    worksheet['A13'] = 'BUBM-TERM'
+    worksheet['A14'] = 'RINF-TERM'
 
 def insert_row_into_spreadsheet(worksheet, ontime_week, column):
     report_column = {
         'Delivery Week': worksheet.cell(row=1, column=column),
-        'STAL-TERM': worksheet.cell(row=3, column=column),
-        'COMM-TERM': worksheet.cell(row=4, column=column),
-        'KELL-TERM': worksheet.cell(row=5, column=column),
-        'LRFD-TERM': worksheet.cell(row=6, column=column),
-        'FKSP-TERM': worksheet.cell(row=7, column=column),
-        'UPPN-TERM': worksheet.cell(row=8, column=column),
-        'UPPN2-TERM': worksheet.cell(row=9, column=column),
-        'HESS-TERM': worksheet.cell(row=10, column=column),
-        'HCIB-TERM': worksheet.cell(row=11, column=column),
-        'BUBM-TERM': worksheet.cell(row=12, column=column),
-        'RINF-TERM': worksheet.cell(row=13, column=column)
+        'STAL-TERM': worksheet.cell(row=4, column=column),
+        'COMM-TERM': worksheet.cell(row=5, column=column),
+        'KELL-TERM': worksheet.cell(row=6, column=column),
+        'LRFD-TERM': worksheet.cell(row=7, column=column),
+        'FKSP-TERM': worksheet.cell(row=8, column=column),
+        'UPPN-TERM': worksheet.cell(row=9, column=column),
+        'UPPN2-TERM': worksheet.cell(row=10, column=column),
+        'HESS-TERM': worksheet.cell(row=11, column=column),
+        'HCIB-TERM': worksheet.cell(row=12, column=column),
+        'BUBM-TERM': worksheet.cell(row=13, column=column),
+        'RINF-TERM': worksheet.cell(row=14, column=column)
     }
 
     for key, cell in report_column.iteritems():
