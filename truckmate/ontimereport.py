@@ -24,11 +24,11 @@ def email_spreadsheet(email_addresses, spreadsheet):
 
     email_message['To'] = ', '.join(email_addresses)
     email_message['From'] = email_username
-    email_message['Subject'] = 'Weekly Tonnage'
+    email_message['Subject'] = 'On Time Report'
 
     # Attach Spreadsheet
     attachment = MIMEApplication(spreadsheet)
-    attachment['Content-Disposition'] = 'attachment; filename="%s"' % 'weekly_tonnage.xlsx'
+    attachment['Content-Disposition'] = 'attachment; filename="%s"' % 'on_time_report.xlsx'
     email_message.attach(attachment)
 
     # Connect to server and send email
