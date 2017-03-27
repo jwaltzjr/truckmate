@@ -109,20 +109,14 @@ dataset['ONTIME_DELV'] = dataset.apply(
     axis = 1
 )
 
-dataset2 = dataset.dropna(subset = ['ONTIME_APPT_REALISTIC']).copy()
-dataset2['ONTIME_APPT_REALISTIC'] = dataset2['ONTIME_APPT_REALISTIC'].astype('bool')
- 
-dataset3 = dataset.dropna(subset = ['ONTIME_DELV']).copy()
-dataset3['ONTIME_DELV'] = dataset3['ONTIME_DELV'].astype('bool')
- 
-groupby = dataset.groupby(['DELIVERY_WEEK','DELIVERY_TERMINAL'])[['ONTIME_APPT']].mean()
-groupby2 = dataset2.groupby(['DELIVERY_WEEK','DELIVERY_TERMINAL'])['ONTIME_APPT_REALISTIC'].mean()
-groupby3 = dataset3.groupby(['DELIVERY_WEEK','DELIVERY_TERMINAL'])['ONTIME_DELV'].mean()
+# dataset['ONTIME_APPT'] = dataset['ONTIME_APPT'].astype('int', raise_on_error=False)
+# dataset['ONTIME_APPT_REALISTIC'] = dataset['ONTIME_APPT_REALISTIC'].astype('int', raise_on_error=False)
+# dataset['ONTIME_DELV'] = dataset['ONTIME_DELV'].astype('int', raise_on_error=False)
 
-print groupby
-print groupby2
-print groupby3
+print dataset
 
-final_result = pandas.concat([groupby, groupby2, groupby3], axis=1)
+dataset.to_csv('ontimereport.csv')
 
-print final_result
+results = dataset[['DELIVERY_WEEK', 'DELIVERY_TERMINAL', 'ONTIME_APPT', 'ONTIME_APPT_REALISTIC', 'ONTIME_DELV']].apply(pandas.to_numeric, errors='ignore').groupby(['DELIVERY_WEEK', 'DELIVERY_TERMINAL'])[['ONTIME_APPT', 'ONTIME_APPT_REALISTIC', 'ONTIME_DELV']].mean()
+
+results.to_csv('ontimereport-reults.csv')
