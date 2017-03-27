@@ -136,15 +136,17 @@ def create_report(data):
         if row.Index[0] != current_date:
             current_column += 1
         current_date = row.Index[0]
-        insert_row_into_spreadsheet(ws, row, current_column)
+        insert_data_into_spreadsheet(ws, row, current_column, 'ONTIME_APPT')
+        insert_data_into_spreadsheet(ws, row, current_column, 'ONTIME_APPT_REALISTIC', row_offset=13)
+        insert_data_into_spreadsheet(ws, row, current_column, 'ONTIME_DELV', row_offset=26)
 
     virtual_wb = openpyxl.writer.excel.save_virtual_workbook(wb)
     return virtual_wb
 
 def insert_titles_into_spreadsheet(worksheet):
     worksheet['A1'] = 'DELIVERY WEEK'
-    worksheet['A3'] = 'Appt On Time to RAD'
 
+    worksheet['A3'] = 'Appt On Time to RAD'
     worksheet['A4'] = 'STAL-TERM'
     worksheet['A5'] = 'COMM-TERM'
     worksheet['A6'] = 'KELL-TERM'
@@ -157,20 +159,46 @@ def insert_titles_into_spreadsheet(worksheet):
     worksheet['A13'] = 'BUBM-TERM'
     worksheet['A14'] = 'RINF-TERM'
 
-def insert_row_into_spreadsheet(worksheet, ontime_week, column):
+    worksheet['A16'] = 'Appt On Time to RAD (Realistic)'
+    worksheet['A17'] = 'STAL-TERM'
+    worksheet['A18'] = 'COMM-TERM'
+    worksheet['A19'] = 'KELL-TERM'
+    worksheet['A20'] = 'LRFD-TERM'
+    worksheet['A21'] = 'FKSP-TERM'
+    worksheet['A22'] = 'UPPN-TERM'
+    worksheet['A23'] = 'UPPN2-TERM'
+    worksheet['A24'] = 'HESS-TERM'
+    worksheet['A25'] = 'HCIB-TERM'
+    worksheet['A26'] = 'BUBM-TERM'
+    worksheet['A27'] = 'RINF-TERM'
+
+    worksheet['A29'] = 'Delv On Time to Appt'
+    worksheet['A30'] = 'STAL-TERM'
+    worksheet['A31'] = 'COMM-TERM'
+    worksheet['A32'] = 'KELL-TERM'
+    worksheet['A33'] = 'LRFD-TERM'
+    worksheet['A34'] = 'FKSP-TERM'
+    worksheet['A35'] = 'UPPN-TERM'
+    worksheet['A36'] = 'UPPN2-TERM'
+    worksheet['A37'] = 'HESS-TERM'
+    worksheet['A38'] = 'HCIB-TERM'
+    worksheet['A39'] = 'BUBM-TERM'
+    worksheet['A40'] = 'RINF-TERM'
+
+def insert_data_into_spreadsheet(worksheet, ontime_week, column, ontime_field, row_offset=0):
     report_column = {
         'Delivery Week': worksheet.cell(row=1, column=column),
-        'STAL-TERM': worksheet.cell(row=4, column=column),
-        'COMM-TERM': worksheet.cell(row=5, column=column),
-        'KELL-TERM': worksheet.cell(row=6, column=column),
-        'LRFD-TERM': worksheet.cell(row=7, column=column),
-        'FKSP-TERM': worksheet.cell(row=8, column=column),
-        'UPPN-TERM': worksheet.cell(row=9, column=column),
-        'UPPN2-TERM': worksheet.cell(row=10, column=column),
-        'HESS-TERM': worksheet.cell(row=11, column=column),
-        'HCIB-TERM': worksheet.cell(row=12, column=column),
-        'BUBM-TERM': worksheet.cell(row=13, column=column),
-        'RINF-TERM': worksheet.cell(row=14, column=column)
+        'STAL-TERM': worksheet.cell(row=4+row_offset, column=column),
+        'COMM-TERM': worksheet.cell(row=5+row_offset, column=column),
+        'KELL-TERM': worksheet.cell(row=6+row_offset, column=column),
+        'LRFD-TERM': worksheet.cell(row=7+row_offset, column=column),
+        'FKSP-TERM': worksheet.cell(row=8+row_offset, column=column),
+        'UPPN-TERM': worksheet.cell(row=9+row_offset, column=column),
+        'UPPN2-TERM': worksheet.cell(row=10+row_offset, column=column),
+        'HESS-TERM': worksheet.cell(row=11+row_offset, column=column),
+        'HCIB-TERM': worksheet.cell(row=12+row_offset, column=column),
+        'BUBM-TERM': worksheet.cell(row=13+row_offset, column=column),
+        'RINF-TERM': worksheet.cell(row=14+row_offset, column=column),
     }
 
     for key, cell in report_column.iteritems():
@@ -180,7 +208,7 @@ def insert_row_into_spreadsheet(worksheet, ontime_week, column):
     current_terminal = ontime_week.Index[1].strip()
 
     report_column['Delivery Week'].value = ontime_week.Index[0]
-    report_column[current_terminal].value = ontime_week.ONTIME_APPT
+    report_column[current_terminal].value = getattr(ontime_week, ontime_field)
 
 ontime_report = OnTimeReport('ontimereport.sql', database.truckmate)
 ontime_avg_dataset = ontime_report.get_dataset_of_averages()
