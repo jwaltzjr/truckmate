@@ -1,8 +1,11 @@
 # TODO / PROBLEMS
+# CURRENTLY BUGGED when creating MIMEApplication of csv.
+#   ERROR: StringIO instance has no attribute '__getitem__'
 # TEST SCRIPT WITH DATETIME VALUES OUT OF RANGE AND NULL FOR EACH FIELD
 
 import os
 import smtplib
+import StringIO
 import sys
 
 import openpyxl
@@ -15,7 +18,7 @@ import database
 
 REPORT_EMAILS = ['jwaltzjr@krclogistics.com']
 
-def email_spreadsheet(email_addresses, spreadsheet):
+def email_spreadsheet(email_addresses, attachments):
     email_username = 'reports@krclogistics.com'
     email_password = 'General1'
     
@@ -26,10 +29,11 @@ def email_spreadsheet(email_addresses, spreadsheet):
     email_message['From'] = email_username
     email_message['Subject'] = 'On Time Report'
 
-    # Attach Spreadsheet
-    attachment = MIMEApplication(spreadsheet)
-    attachment['Content-Disposition'] = 'attachment; filename="%s"' % 'on_time_report.xlsx'
-    email_message.attach(attachment)
+    # Attachments
+    for attachment in attachments:
+        mime_attachment = MIMEApplication(attachment)
+        mime_attachment['Content-Disposition'] = 'attachment; filename="%s"' % 'on_time_report.xlsx'
+        email_message.attach(mime_attachment)
 
     # Connect to server and send email
     server = smtplib.SMTP('smtp.office365.com', 587)
@@ -69,6 +73,13 @@ class OnTimeReport(object):
         self.sql_query = self.load_query_from_file(os.path.join(sys.path[0], file_name))
         self.dataset = self.fetch_data_from_db(self.sql_query, datab)
         self.apply_calculated_columns()
+
+    @property
+    def data_as_csv(self):
+        virtual_csv = StringIO.StringIO()
+        self.dataset.to_csv(virtual_csv)
+        virtual_csv.seek(0)
+        return virtual_csv
 
     def load_query_from_file(self, file_path):
         with open(file_path, 'r') as sql_file:
@@ -223,4 +234,4 @@ ontime_report = OnTimeReport('ontimereport.sql', database.truckmate)
 ontime_avg_dataset = ontime_report.get_dataset_of_averages()
 
 report_file = create_report(ontime_avg_dataset)
-email_spreadsheet(REPORT_EMAILS, report_file)
+email_spreadsheet(REPORT_EMAILS, [report_file, ontime_report.data_as_csv])
