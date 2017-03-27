@@ -109,14 +109,16 @@ dataset['ONTIME_DELV'] = dataset.apply(
     axis = 1
 )
 
-# dataset['ONTIME_APPT'] = dataset['ONTIME_APPT'].astype('int', raise_on_error=False)
-# dataset['ONTIME_APPT_REALISTIC'] = dataset['ONTIME_APPT_REALISTIC'].astype('int', raise_on_error=False)
-# dataset['ONTIME_DELV'] = dataset['ONTIME_DELV'].astype('int', raise_on_error=False)
+numeric_dataset = dataset[
+    [
+        'DELIVERY_WEEK',
+        'DELIVERY_TERMINAL',
+        'ONTIME_APPT',
+        'ONTIME_APPT_REALISTIC',
+        'ONTIME_DELV'
+    ]
+].apply(pandas.to_numeric, errors='ignore')
 
-print dataset
-
-dataset.to_csv('ontimereport.csv')
-
-results = dataset[['DELIVERY_WEEK', 'DELIVERY_TERMINAL', 'ONTIME_APPT', 'ONTIME_APPT_REALISTIC', 'ONTIME_DELV']].apply(pandas.to_numeric, errors='ignore').groupby(['DELIVERY_WEEK', 'DELIVERY_TERMINAL'])[['ONTIME_APPT', 'ONTIME_APPT_REALISTIC', 'ONTIME_DELV']].mean()
-
-results.to_csv('ontimereport-reults.csv')
+results = numeric_dataset.groupby(
+    ['DELIVERY_WEEK', 'DELIVERY_TERMINAL']
+)[['ONTIME_APPT', 'ONTIME_APPT_REALISTIC', 'ONTIME_DELV']].mean()
