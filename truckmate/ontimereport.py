@@ -124,8 +124,65 @@ class OnTimeReport(object):
 
         return averages
 
+def create_report(data):
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    insert_titles_into_spreadsheet(ws)
+
+    current_column = 1
+    current_date = None
+    for row in data.itertuples():
+        if row.Index[0] != current_date:
+            current_column += 1
+        current_date = row.Index[0]
+        insert_row_into_spreadsheet(ws, row, current_column)
+
+    virtual_wb = openpyxl.writer.excel.save_virtual_workbook(wb)
+    return virtual_wb
+
+def insert_titles_into_spreadsheet(worksheet):
+    worksheet['A1'] = 'DELIVERY WEEK'
+
+    worksheet['A3'] = 'STAL-TERM'
+    worksheet['A4'] = 'COMM-TERM'
+    worksheet['A5'] = 'KELL-TERM'
+    worksheet['A6'] = 'LRFD-TERM'
+    worksheet['A7'] = 'FKSP-TERM'
+    worksheet['A8'] = 'UPPN-TERM'
+    worksheet['A9'] = 'UPPN2-TERM'
+    worksheet['A10'] = 'HESS-TERM'
+    worksheet['A11'] = 'HCIB-TERM'
+    worksheet['A12'] = 'BUBM-TERM'
+    worksheet['A13'] = 'RINF-TERM'
+
+def insert_row_into_spreadsheet(worksheet, ontime_week, column):
+    report_column = {
+        'Delivery Week': worksheet.cell(row=1, column=column),
+        'STAL-TERM': worksheet.cell(row=3, column=column),
+        'COMM-TERM': worksheet.cell(row=4, column=column),
+        'KELL-TERM': worksheet.cell(row=5, column=column),
+        'LRFD-TERM': worksheet.cell(row=6, column=column),
+        'FKSP-TERM': worksheet.cell(row=7, column=column),
+        'UPPN-TERM': worksheet.cell(row=8, column=column),
+        'UPPN2-TERM': worksheet.cell(row=9, column=column),
+        'HESS-TERM': worksheet.cell(row=10, column=column),
+        'HCIB-TERM': worksheet.cell(row=11, column=column),
+        'BUBM-TERM': worksheet.cell(row=12, column=column),
+        'RINF-TERM': worksheet.cell(row=13, column=column)
+    }
+
+    for key, cell in report_column.iteritems():
+        if key != 'Delivery Week':
+            cell.number_format = '0.00%'
+
+    current_terminal = ontime_week.Index[1].strip()
+
+    report_column['Delivery Week'].value = ontime_week.Index[0]
+    report_column[current_terminal].value = ontime_week.ONTIME_APPT
+
 ontime_report = OnTimeReport('ontimereport.sql', database.truckmate)
 ontime_avg_dataset = ontime_report.get_dataset_of_averages()
 
-print ontime_report.dataset
-print ontime_avg_dataset
+report_file = create_report(ontime_avg_dataset)
+email_spreadsheet(REPORT_EMAILS, report_file)
