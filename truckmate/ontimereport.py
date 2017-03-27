@@ -72,15 +72,6 @@ with database.truckmate as db:
     dataset = pandas.read_sql(
         sql_query,
         db.connection
-        # parse_dates = {
-        #     'RECEIVED': '%Y-%m-%d',
-        #     'RAD': '%Y-%m-%d',
-        #     'RPD': '%Y-%m-%d',
-        #     'DELIVER_BY': '%Y-%m-%d-%H.%M.%S.%f',
-        #     'DELIVER_BY_END': '%Y-%m-%d-%H.%M.%S.%f',
-        #     'CREATED_TIME': '%Y-%m-%d-%H.%M.%S.%f',
-        #     'ARRIVED': '%Y-%m-%d-%H.%M.%S.%f'
-        # }
     )
 
 dataset['ONTIME_APPT'] = dataset.apply(
