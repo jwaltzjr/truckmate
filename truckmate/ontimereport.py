@@ -140,6 +140,8 @@ def create_report(data):
         insert_data_into_spreadsheet(ws, row, current_column, 'ONTIME_APPT_REALISTIC', row_offset=13)
         insert_data_into_spreadsheet(ws, row, current_column, 'ONTIME_DELV', row_offset=26)
 
+    style_spreadsheet(ws)
+
     virtual_wb = openpyxl.writer.excel.save_virtual_workbook(wb)
     return virtual_wb
 
@@ -209,6 +211,13 @@ def insert_data_into_spreadsheet(worksheet, ontime_week, column, ontime_field, r
 
     report_column['Delivery Week'].value = ontime_week.Index[0]
     report_column[current_terminal].value = getattr(ontime_week, ontime_field)
+
+def style_spreadsheet(worksheet):
+    for spreadsheet_section in ['A', 3, 16, 29]:
+        for cell in worksheet[spreadsheet_section]:
+            cell.font = cell.font.copy(bold=True)
+    for spreadsheet_cell in ['A3', 'A16', 'A29']:
+        worksheet[spreadsheet_cell].font = worksheet[spreadsheet_cell].font.copy(underline='single')
 
 ontime_report = OnTimeReport('ontimereport.sql', database.truckmate)
 ontime_avg_dataset = ontime_report.get_dataset_of_averages()
