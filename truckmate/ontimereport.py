@@ -103,112 +103,115 @@ class OnTimeReport(object):
 
         return averages
 
-def create_report(data):
-    wb = openpyxl.Workbook()
-    ws = wb.active
+    def export_as_xlsx(self):
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        data = self.get_dataset_of_averages()
 
-    insert_titles_into_spreadsheet(ws)
+        self.excel_insert_titles(ws)
 
-    current_column = 1
-    current_date = None
-    for row in data.itertuples():
-        if row.Index[0] != current_date:
-            current_column += 1
-        current_date = row.Index[0]
-        insert_data_into_spreadsheet(ws, row, current_column, 'ONTIME_APPT')
-        insert_data_into_spreadsheet(ws, row, current_column, 'ONTIME_APPT_REALISTIC', row_offset=13)
-        insert_data_into_spreadsheet(ws, row, current_column, 'ONTIME_DELV', row_offset=26)
+        current_column = 1
+        current_date = None
+        for row in data.itertuples():
+            if row.Index[0] != current_date:
+                current_column += 1
+            current_date = row.Index[0]
+            self.excel_insert_data(ws, row, current_column, 'ONTIME_APPT')
+            self.excel_insert_data(ws, row, current_column, 'ONTIME_APPT_REALISTIC', row_offset=13)
+            self.excel_insert_data(ws, row, current_column, 'ONTIME_DELV', row_offset=26)
 
-    style_spreadsheet(ws)
+        self.excel_apply_styling(ws)
 
-    virtual_wb = openpyxl.writer.excel.save_virtual_workbook(wb)
-    return virtual_wb
+        virtual_wb = openpyxl.writer.excel.save_virtual_workbook(wb)
+        return virtual_wb
 
-def insert_titles_into_spreadsheet(worksheet):
-    worksheet['A1'] = 'DELIVERY WEEK'
+    def excel_insert_titles(self, worksheet):
+        worksheet['A1'] = 'DELIVERY WEEK'
 
-    worksheet['A3'] = 'Appt On Time to RAD'
-    worksheet['A4'] = 'STAL-TERM'
-    worksheet['A5'] = 'COMM-TERM'
-    worksheet['A6'] = 'KELL-TERM'
-    worksheet['A7'] = 'LRFD-TERM'
-    worksheet['A8'] = 'FKSP-TERM'
-    worksheet['A9'] = 'UPPN-TERM'
-    worksheet['A10'] = 'UPPN2-TERM'
-    worksheet['A11'] = 'HESS-TERM'
-    worksheet['A12'] = 'HCIB-TERM'
-    worksheet['A13'] = 'BUBM-TERM'
-    worksheet['A14'] = 'RINF-TERM'
+        worksheet['A3'] = 'Appt On Time to RAD'
+        worksheet['A4'] = 'STAL-TERM'
+        worksheet['A5'] = 'COMM-TERM'
+        worksheet['A6'] = 'KELL-TERM'
+        worksheet['A7'] = 'LRFD-TERM'
+        worksheet['A8'] = 'FKSP-TERM'
+        worksheet['A9'] = 'UPPN-TERM'
+        worksheet['A10'] = 'UPPN2-TERM'
+        worksheet['A11'] = 'HESS-TERM'
+        worksheet['A12'] = 'HCIB-TERM'
+        worksheet['A13'] = 'BUBM-TERM'
+        worksheet['A14'] = 'RINF-TERM'
 
-    worksheet['A16'] = 'Appt On Time to RAD (Realistic)'
-    worksheet['A17'] = 'STAL-TERM'
-    worksheet['A18'] = 'COMM-TERM'
-    worksheet['A19'] = 'KELL-TERM'
-    worksheet['A20'] = 'LRFD-TERM'
-    worksheet['A21'] = 'FKSP-TERM'
-    worksheet['A22'] = 'UPPN-TERM'
-    worksheet['A23'] = 'UPPN2-TERM'
-    worksheet['A24'] = 'HESS-TERM'
-    worksheet['A25'] = 'HCIB-TERM'
-    worksheet['A26'] = 'BUBM-TERM'
-    worksheet['A27'] = 'RINF-TERM'
+        worksheet['A16'] = 'Appt On Time to RAD (Realistic)'
+        worksheet['A17'] = 'STAL-TERM'
+        worksheet['A18'] = 'COMM-TERM'
+        worksheet['A19'] = 'KELL-TERM'
+        worksheet['A20'] = 'LRFD-TERM'
+        worksheet['A21'] = 'FKSP-TERM'
+        worksheet['A22'] = 'UPPN-TERM'
+        worksheet['A23'] = 'UPPN2-TERM'
+        worksheet['A24'] = 'HESS-TERM'
+        worksheet['A25'] = 'HCIB-TERM'
+        worksheet['A26'] = 'BUBM-TERM'
+        worksheet['A27'] = 'RINF-TERM'
 
-    worksheet['A29'] = 'Delv On Time to Appt'
-    worksheet['A30'] = 'STAL-TERM'
-    worksheet['A31'] = 'COMM-TERM'
-    worksheet['A32'] = 'KELL-TERM'
-    worksheet['A33'] = 'LRFD-TERM'
-    worksheet['A34'] = 'FKSP-TERM'
-    worksheet['A35'] = 'UPPN-TERM'
-    worksheet['A36'] = 'UPPN2-TERM'
-    worksheet['A37'] = 'HESS-TERM'
-    worksheet['A38'] = 'HCIB-TERM'
-    worksheet['A39'] = 'BUBM-TERM'
-    worksheet['A40'] = 'RINF-TERM'
+        worksheet['A29'] = 'Delv On Time to Appt'
+        worksheet['A30'] = 'STAL-TERM'
+        worksheet['A31'] = 'COMM-TERM'
+        worksheet['A32'] = 'KELL-TERM'
+        worksheet['A33'] = 'LRFD-TERM'
+        worksheet['A34'] = 'FKSP-TERM'
+        worksheet['A35'] = 'UPPN-TERM'
+        worksheet['A36'] = 'UPPN2-TERM'
+        worksheet['A37'] = 'HESS-TERM'
+        worksheet['A38'] = 'HCIB-TERM'
+        worksheet['A39'] = 'BUBM-TERM'
+        worksheet['A40'] = 'RINF-TERM'
 
-def insert_data_into_spreadsheet(worksheet, ontime_week, column, ontime_field, row_offset=0):
-    report_column = {
-        'Delivery Week': worksheet.cell(row=1, column=column),
-        'STAL-TERM': worksheet.cell(row=4+row_offset, column=column),
-        'COMM-TERM': worksheet.cell(row=5+row_offset, column=column),
-        'KELL-TERM': worksheet.cell(row=6+row_offset, column=column),
-        'LRFD-TERM': worksheet.cell(row=7+row_offset, column=column),
-        'FKSP-TERM': worksheet.cell(row=8+row_offset, column=column),
-        'UPPN-TERM': worksheet.cell(row=9+row_offset, column=column),
-        'UPPN2-TERM': worksheet.cell(row=10+row_offset, column=column),
-        'HESS-TERM': worksheet.cell(row=11+row_offset, column=column),
-        'HCIB-TERM': worksheet.cell(row=12+row_offset, column=column),
-        'BUBM-TERM': worksheet.cell(row=13+row_offset, column=column),
-        'RINF-TERM': worksheet.cell(row=14+row_offset, column=column),
-    }
+    def excel_insert_data(self, worksheet, ontime_week, column, ontime_field, row_offset=0):
+        report_column = {
+            'Delivery Week': worksheet.cell(row=1, column=column),
+            'STAL-TERM': worksheet.cell(row=4+row_offset, column=column),
+            'COMM-TERM': worksheet.cell(row=5+row_offset, column=column),
+            'KELL-TERM': worksheet.cell(row=6+row_offset, column=column),
+            'LRFD-TERM': worksheet.cell(row=7+row_offset, column=column),
+            'FKSP-TERM': worksheet.cell(row=8+row_offset, column=column),
+            'UPPN-TERM': worksheet.cell(row=9+row_offset, column=column),
+            'UPPN2-TERM': worksheet.cell(row=10+row_offset, column=column),
+            'HESS-TERM': worksheet.cell(row=11+row_offset, column=column),
+            'HCIB-TERM': worksheet.cell(row=12+row_offset, column=column),
+            'BUBM-TERM': worksheet.cell(row=13+row_offset, column=column),
+            'RINF-TERM': worksheet.cell(row=14+row_offset, column=column),
+        }
 
-    for key, cell in report_column.iteritems():
-        if key != 'Delivery Week':
-            cell.number_format = '0.00%'
+        for key, cell in report_column.iteritems():
+            if key != 'Delivery Week':
+                cell.number_format = '0.00%'
 
-    current_terminal = ontime_week.Index[1].strip()
+        current_terminal = ontime_week.Index[1].strip()
 
-    report_column['Delivery Week'].value = ontime_week.Index[0]
-    report_column[current_terminal].value = getattr(ontime_week, ontime_field)
+        report_column['Delivery Week'].value = ontime_week.Index[0]
+        report_column[current_terminal].value = getattr(ontime_week, ontime_field)
 
-def style_spreadsheet(worksheet):
-    for spreadsheet_section in ['A', 3, 16, 29]:
-        for cell in worksheet[spreadsheet_section]:
-            cell.font = cell.font.copy(bold=True)
-    for spreadsheet_cell in ['A3', 'A16', 'A29']:
-        worksheet[spreadsheet_cell].font = worksheet[spreadsheet_cell].font.copy(underline='single')
+    def excel_apply_styling(self, worksheet):
+        for spreadsheet_section in ['A', 3, 16, 29]:
+            for cell in worksheet[spreadsheet_section]:
+                cell.font = cell.font.copy(bold=True)
+        for spreadsheet_cell in ['A3', 'A16', 'A29']:
+            worksheet[spreadsheet_cell].font = worksheet[spreadsheet_cell].font.copy(underline='single')
 
-ontime_report = OnTimeReport('ontimereport.sql', database.truckmate)
-ontime_avg_dataset = ontime_report.get_dataset_of_averages()
+def main():
+    ontime_report = OnTimeReport('ontimereport.sql', database.truckmate)
+    report_file = ontimereport.export_as_xlsx()
 
-report_file = create_report(ontime_avg_dataset)
+    email_message = krcemail.KrcEmail(
+        REPORT_EMAILS,
+        subject='On Time Report',
+        attachments=[
+            ('on_time_report.xlsx', report_file),
+            ('on_time_report_data.csv', ontime_report.data_as_csv)
+        ]
+    )
+    email_message.send()
 
-email_message = krcemail.KrcEmail(
-    REPORT_EMAILS,
-    subject='On Time Report',
-    attachments=[
-        ('on_time_report.xlsx', report_file),
-        ('on_time_report_data.csv', ontime_report.data_as_csv)
-    ]
-)
-email_message.send()
+if __name__ == '__main__':
+    main()
