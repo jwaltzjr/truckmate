@@ -1,6 +1,4 @@
 # TODO / PROBLEMS
-# CURRENTLY BUGGED when creating MIMEApplication of csv.
-#   ERROR: StringIO instance has no attribute '__getitem__'
 # TEST SCRIPT WITH DATETIME VALUES OUT OF RANGE AND NULL FOR EACH FIELD
 
 import os
@@ -31,8 +29,8 @@ def email_spreadsheet(email_addresses, attachments):
 
     # Attachments
     for attachment in attachments:
-        mime_attachment = MIMEApplication(attachment)
-        mime_attachment['Content-Disposition'] = 'attachment; filename="%s"' % 'on_time_report.xlsx'
+        mime_attachment = MIMEApplication(attachment[1])
+        mime_attachment['Content-Disposition'] = 'attachment; filename="%s"' % attachment[0]
         email_message.attach(mime_attachment)
 
     # Connect to server and send email
@@ -79,7 +77,7 @@ class OnTimeReport(object):
         virtual_csv = StringIO.StringIO()
         self.dataset.to_csv(virtual_csv)
         virtual_csv.seek(0)
-        return virtual_csv
+        return virtual_csv.getvalue()
 
     def load_query_from_file(self, file_path):
         with open(file_path, 'r') as sql_file:
@@ -234,4 +232,10 @@ ontime_report = OnTimeReport('ontimereport.sql', database.truckmate)
 ontime_avg_dataset = ontime_report.get_dataset_of_averages()
 
 report_file = create_report(ontime_avg_dataset)
-email_spreadsheet(REPORT_EMAILS, [report_file, ontime_report.data_as_csv])
+email_spreadsheet(
+    REPORT_EMAILS,
+    [
+        ('on_time_report.xlsx', report_file),
+        ('on_time_report_data.csv', ontime_report.data_as_csv)
+    ]
+)
