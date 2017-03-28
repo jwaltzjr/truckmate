@@ -29,7 +29,7 @@ class KrcEmail():
         self.password = password
 
         self.email = None
-        self.build(send_to, send_from, subject, message, message_html, attachments)
+        self.build(self.send_to, self.send_from, self.subject, self.message, self.message_html, self.attachments)
 
     def build(self, send_to, send_from, subject, message, message_html, attachments):
         email_object = MIMEMultipart('alternative')
