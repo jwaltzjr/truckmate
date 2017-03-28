@@ -18,17 +18,16 @@ REPORT_EMAILS = [
 
 class TonnageReport(object):
 
-    def __init__(self):
-        sql_file_path = os.path.join(sys.path[0], 'tonnage.sql')
+    def __init__(self, file_name, datab):
+        sql_file_path = os.path.join(sys.path[0], file_name)
         self.sql_query = self.load_query_from_file(sql_file_path)
-
-        self.dataset = self.fetch_data_from_db(database.truckmate, self.sql_query)
+        self.dataset = self.fetch_data_from_db(self.sql_query, datab)
 
     def load_query_from_file(self, file_path):
         with open(file_path, 'r') as sql_file:
             return sql_file.read()
 
-    def fetch_data_from_db(self, db, query):
+    def fetch_data_from_db(self, query, db):
         with db as datab:
             with datab.connection.cursor() as cursor:
                 cursor.execute(query)
@@ -127,7 +126,7 @@ class TonnageReport(object):
             worksheet[cell].font = worksheet[cell].font.copy(underline='single')
 
 def main():
-    tonnage_report = TonnageReport()
+    tonnage_report = TonnageReport('tonnage.sql', database.truckmate)
     email_message = krcemail.KrcEmail(
         REPORT_EMAILS,
         subject='Weekly Tonnage',
