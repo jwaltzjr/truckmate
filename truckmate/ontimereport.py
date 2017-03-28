@@ -201,13 +201,11 @@ class OnTimeReport(object):
 
 def main():
     ontime_report = OnTimeReport('ontimereport.sql', database.truckmate)
-    report_file = ontimereport.export_as_xlsx()
-
     email_message = krcemail.KrcEmail(
         REPORT_EMAILS,
         subject='On Time Report',
         attachments=[
-            ('on_time_report.xlsx', report_file),
+            ('on_time_report.xlsx', ontime_report.export_as_xlsx()),
             ('on_time_report_data.csv', ontime_report.data_as_csv)
         ]
     )
