@@ -1,12 +1,10 @@
 import os
-import smtplib
 import sys
+
 import openpyxl
 
-from email.MIMEMultipart import MIMEMultipart
-from email.mime.application import MIMEApplication
-
 import database
+import krcemail
 
 TONNAGE_EMAILS = [
     'jwaltzjr@krclogistics.com',
@@ -148,29 +146,6 @@ def style_spreadsheet(worksheet):
     worksheet['A17'].font = worksheet['A17'].font.copy(underline='single')
     worksheet['A26'].font = worksheet['A26'].font.copy(underline='single')
 
-def email_spreadsheet(email_addresses, spreadsheet):
-    email_username = 'reports@krclogistics.com'
-    email_password = 'General1'
-    
-    # Create email
-    email_message = MIMEMultipart('alternative')
-
-    email_message['To'] = ', '.join(email_addresses)
-    email_message['From'] = email_username
-    email_message['Subject'] = 'Weekly Tonnage'
-
-    # Attach Spreadsheet
-    attachment = MIMEApplication(spreadsheet)
-    attachment['Content-Disposition'] = 'attachment; filename="%s"' % 'weekly_tonnage.xlsx'
-    email_message.attach(attachment)
-
-    # Connect to server and send email
-    server = smtplib.SMTP('smtp.office365.com', 587)
-    server.starttls()
-    server.login(email_username, email_password)
-    server.sendmail(email_username, email_addresses, email_message.as_string())
-    server.quit()
-
 def main():
     sql_file_path = os.path.join(sys.path[0], 'tonnage.sql')
     with open(sql_file_path, 'r') as sql_file:
@@ -179,7 +154,14 @@ def main():
     dataset = fetch_data_from_db(database.truckmate, sql_query)
     report = create_report(dataset)
 
-    email_spreadsheet(TONNAGE_EMAILS, report)
+    email_message = krcemail.KrcEmail(
+        TONNAGE_EMAILS,
+        subject='Weekly Tonnage',
+        attachments=[
+            ('weekly_tonnage.xlsx', report)
+        ]
+    )
+    email_message.send()
 
 if __name__ == '__main__':
     main()
