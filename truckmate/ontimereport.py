@@ -1,6 +1,3 @@
-# TODO / PROBLEMS
-# TEST SCRIPT WITH DATETIME VALUES OUT OF RANGE AND NULL FOR EACH FIELD
-
 import os
 import smtplib
 import StringIO
