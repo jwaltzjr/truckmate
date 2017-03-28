@@ -28,7 +28,8 @@ class KrcEmail():
         self.port = port
         self.password = password
 
-        self.email = self.build(send_to, send_from, subject, message, message_html, attachments)
+        self.email = None
+        self.build(send_to, send_from, subject, message, message_html, attachments)
 
     def build(self, send_to, send_from, subject, message, message_html, attachments):
         email_object = MIMEMultipart('alternative')
@@ -46,7 +47,7 @@ class KrcEmail():
             mime_attachment['Content-Disposition'] = 'attachment; filename="%s"' % attachment.filename
             email_object.attach(mime_attachment)
 
-        return email_object
+        self.email = email_object
 
     def send(self):
         server = smtplib.SMTP(self.server, self.port)
