@@ -1,5 +1,7 @@
 import pyodbc
 
+import env
+
 class DatabaseConnection(object):
 
     def __init__(self, odbc_driver, system, database, user, password):
@@ -32,6 +34,6 @@ truckmate = DatabaseConnection(
     '{IBM DB2 ODBC DRIVER - DB2COPY1}',
     'TM_Reporting_00001',
     'STALEY',
-    'TMW_SCRIPTING',
-    'pY2$t%r\L49f`\QLk'
+    env.db_user.value,
+    env.db_password.value
 )
