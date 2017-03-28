@@ -1,16 +1,13 @@
 import collections
 import datetime
-import smtplib
 import urllib
-
-from email.MIMEMultipart import MIMEMultipart
-from email.mime.text import MIMEText
 
 # Third-party
 import pyodbc
 import xlrd
 
 import database
+import krcemail
 
 ERROR_EMAIL_ADDRESSES = ['jwaltzjr@krclogistics.com', 'csenti@krclogistics.com']
 DB2_DATABASE = 'STALEY'
@@ -105,44 +102,13 @@ class MarsFuelAverage(CalculatedFuelAverage):
         return (round((fuel_price.price-1.08)/5,2)/2)*100
 
 def email_error_message(error_message, email_addresses):
-    email_username = 'reports@krclogistics.com'
-    email_password = 'General1'
-
-    email_html = """
-    <!DOCTYPE html>
-    <html>
-    <body>
-    <p>There was an error with the automatic fuel insert.</p>
-    <p>Error Message:<br>{}</p>
-    <br>
-    <p>ITDEPREQ</p>
-    </body>
-    </html>
-    """.format(error_message)
-    
-    email_plaintxt = """
-    There was an error with the automatic fuel insert.
-    Error Message:
-    {}
-
-    ITDEPREQ
-    """.format(error_message)
-    
-    # Create email
-    email_message = MIMEMultipart('alternative')
-
-    email_message['To'] = ', '.join(email_addresses)
-    email_message['From'] = email_username
-    email_message['Subject'] = 'Automatic Fuel Failure'
-    email_message.attach(MIMEText(email_plaintxt, 'plain'))
-    email_message.attach(MIMEText(email_html, 'html'))
-
-    # Connect to server and send email
-    server = smtplib.SMTP('smtp.office365.com', 587)
-    server.starttls()
-    server.login(email_username, email_password)
-    server.sendmail(email_username, email_addresses, email_message.as_string())
-    server.quit()
+    email_body = 'There was an error with the automatic fuel insert.\n\nError Message:\n{}\n\nITDEPREQ'    
+    email_message = krcemail.KrcEmail(
+        email_addresses,
+        subject='Automatic Fuel Failure',
+        message=email_body.format(error_message)
+    )
+    email_message.send()
 
 def insert_fuel_into_database(database, fuel_averages, fuel_spreadsheet):
     with database as db:
