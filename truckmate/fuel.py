@@ -116,11 +116,14 @@ def insert_fuel_into_database(database, fuel_averages, fuel_spreadsheet):
             for fuel_average in fuel_averages:
                 fuel_average.insert_into_db(cursor, fuel_spreadsheet.current_fuel)
 
-def main(database, fuel_averages):
+def main(fuel_averages):
+    db = database.truckmate
+    db.database = DB2_DATABASE
+
     fuel_spreadsheet = FuelSheet()
     if fuel_spreadsheet.is_recent:
         try:
-            insert_fuel_into_database(database, fuel_averages, fuel_spreadsheet)
+            insert_fuel_into_database(db, fuel_averages, fuel_spreadsheet)
 
         except pyodbc.IntegrityError as error:
             error_message = 'One or more fuel surcharges have already been entered. {}'.format(error)
@@ -133,9 +136,6 @@ def main(database, fuel_averages):
         error_message = 'No fuel record found for this week.'
         email_error_message(error_message, ERROR_EMAIL_ADDRESSES)
 
-truckmate = database.truckmate
-truckmate.database = DB2_DATABASE
-
 fuel_averages = (
     FuelAverage('DOE-US', 1),
     FuelAverage('DOE-LWUS', 8),
@@ -146,4 +146,4 @@ fuel_averages = (
 )
 
 if __name__ == '__main__':
-    main(truckmate, fuel_averages)
+    main(fuel_averages)
