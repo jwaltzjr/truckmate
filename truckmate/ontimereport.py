@@ -1,41 +1,13 @@
 import os
-import smtplib
 import StringIO
 import sys
 
 import openpyxl
 import pandas
 
-from email.MIMEMultipart import MIMEMultipart
-from email.mime.application import MIMEApplication
-
 import database
 
 REPORT_EMAILS = ['jwaltzjr@krclogistics.com']
-
-def email_spreadsheet(email_addresses, attachments):
-    email_username = 'reports@krclogistics.com'
-    email_password = 'General1'
-    
-    # Create email
-    email_message = MIMEMultipart('alternative')
-
-    email_message['To'] = ', '.join(email_addresses)
-    email_message['From'] = email_username
-    email_message['Subject'] = 'On Time Report'
-
-    # Attachments
-    for attachment in attachments:
-        mime_attachment = MIMEApplication(attachment[1])
-        mime_attachment['Content-Disposition'] = 'attachment; filename="%s"' % attachment[0]
-        email_message.attach(mime_attachment)
-
-    # Connect to server and send email
-    server = smtplib.SMTP('smtp.office365.com', 587)
-    server.starttls()
-    server.login(email_username, email_password)
-    server.sendmail(email_username, email_addresses, email_message.as_string())
-    server.quit()
 
 class OnTimeReport(object):
 
@@ -229,10 +201,13 @@ ontime_report = OnTimeReport('ontimereport.sql', database.truckmate)
 ontime_avg_dataset = ontime_report.get_dataset_of_averages()
 
 report_file = create_report(ontime_avg_dataset)
-email_spreadsheet(
+
+email_message = krcemail.KrcEmail(
     REPORT_EMAILS,
-    [
+    subject='On Time Report',
+    attachments=[
         ('on_time_report.xlsx', report_file),
         ('on_time_report_data.csv', ontime_report.data_as_csv)
     ]
 )
+email_message.send()
