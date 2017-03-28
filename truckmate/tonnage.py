@@ -51,98 +51,73 @@ class TonnageReport(object):
         return virtual_wb
 
     def _excel_insert_titles(self, worksheet):
-        worksheet['A1'] = 'DELIVERY WEEK'
+        titles = {
+            'A1': 'DELIVERY WEEK',
+            'A3': 'WEIGHT 10',
+            'A4': 'WEIGHT 11',
+            'A5': 'WEIGHT 12',
+            'A6': 'WEIGHT 13',
+            'A7': 'WEIGHT 14',
+            'A8': 'WEIGHT 15',
+            'A9': 'WEIGHT TOTAL',
+            'A12': '# ORDERS 10',
+            'A13': '# ORDERS 11',
+            'A14': '# ORDERS 12',
+            'A15': '# ORDERS 13',
+            'A16': '# ORDERS 14',
+            'A17': '# ORDERS 15',
+            'A18': '# ORDERS TOTAL',
+            'A21': 'AVG WEIGHT 10',
+            'A22': 'AVG WEIGHT 11',
+            'A23': 'AVG WEIGHT 12',
+            'A24': 'AVG WEIGHT 13',
+            'A25': 'AVG WEIGHT 14',
+            'A26': 'AVG WEIGHT 15',
+            'A27': 'AVG WEIGHT TOTAL',
+            'A30': 'WEIGHT UNDEF',
+            'A31': '# ORDERS UNDEF',
+            'A32': 'AVG WEIGHT UNDEF'
+        }
 
-        worksheet['A3'] = 'WEIGHT 10'
-        worksheet['A4'] = 'WEIGHT 11'
-        worksheet['A5'] = 'WEIGHT 12'
-        worksheet['A6'] = 'WEIGHT 13'
-        worksheet['A7'] = 'WEIGHT 14'
-        worksheet['A8'] = 'WEIGHT 15'
-        worksheet['A9'] = 'WEIGHT TOTAL'
+        for cell, title in titles.items():
+            worksheet[cell] = title
 
-        worksheet['A12'] = '# ORDERS 10'
-        worksheet['A13'] = '# ORDERS 11'
-        worksheet['A14'] = '# ORDERS 12'
-        worksheet['A15'] = '# ORDERS 13'
-        worksheet['A16'] = '# ORDERS 14'
-        worksheet['A17'] = '# ORDERS 15'
-        worksheet['A18'] = '# ORDERS TOTAL'
-
-        worksheet['A21'] = 'AVG WEIGHT 10'
-        worksheet['A22'] = 'AVG WEIGHT 11'
-        worksheet['A23'] = 'AVG WEIGHT 12'
-        worksheet['A24'] = 'AVG WEIGHT 13'
-        worksheet['A25'] = 'AVG WEIGHT 14'
-        worksheet['A26'] = 'AVG WEIGHT 15'
-        worksheet['A27'] = 'AVG WEIGHT TOTAL'
-
-        worksheet['A30'] = 'WEIGHT UNDEF'
-        worksheet['A31'] = '# ORDERS UNDEF'
-        worksheet['A32'] = 'AVG WEIGHT UNDEF'
 
     def _excel_insert_data(self, worksheet, tonnage_week, column):
         tonnage_week_column = {
-            'title': worksheet.cell(row=1, column=column),
-            'weight_10': worksheet.cell(row=3, column=column),
-            'weight_11': worksheet.cell(row=4, column=column),
-            'weight_12': worksheet.cell(row=5, column=column),
-            'weight_13': worksheet.cell(row=6, column=column),
-            'weight_14': worksheet.cell(row=7, column=column),
-            'weight_15': worksheet.cell(row=8, column=column),
-            'weight_total': worksheet.cell(row=9, column=column),
-            'num_orders_10': worksheet.cell(row=12, column=column),
-            'num_orders_11': worksheet.cell(row=13, column=column),
-            'num_orders_12': worksheet.cell(row=14, column=column),
-            'num_orders_13': worksheet.cell(row=15, column=column),
-            'num_orders_14': worksheet.cell(row=16, column=column),
-            'num_orders_15': worksheet.cell(row=17, column=column),
-            'num_orders_total': worksheet.cell(row=18, column=column),
-            'avg_weight_10': worksheet.cell(row=21, column=column),
-            'avg_weight_11': worksheet.cell(row=22, column=column),
-            'avg_weight_12': worksheet.cell(row=23, column=column),
-            'avg_weight_13': worksheet.cell(row=24, column=column),
-            'avg_weight_14': worksheet.cell(row=25, column=column),
-            'avg_weight_15': worksheet.cell(row=26, column=column),
-            'avg_weight_total': worksheet.cell(row=27, column=column),
-            'weight_undef': worksheet.cell(row=30, column=column),
-            'num_orders_undef': worksheet.cell(row=31, column=column),
-            'avg_weight_undef': worksheet.cell(row=32, column=column)
+            'DELIVERY_WEEK': worksheet.cell(row=1, column=column),
+            'WEIGHT_10': worksheet.cell(row=3, column=column),
+            'WEIGHT_11': worksheet.cell(row=4, column=column),
+            'WEIGHT_12': worksheet.cell(row=5, column=column),
+            'WEIGHT_13': worksheet.cell(row=6, column=column),
+            'WEIGHT_14': worksheet.cell(row=7, column=column),
+            'WEIGHT_15': worksheet.cell(row=8, column=column),
+            'WEIGHT': worksheet.cell(row=9, column=column),
+            'NUM_ORDERS_10': worksheet.cell(row=12, column=column),
+            'NUM_ORDERS_11': worksheet.cell(row=13, column=column),
+            'NUM_ORDERS_12': worksheet.cell(row=14, column=column),
+            'NUM_ORDERS_13': worksheet.cell(row=15, column=column),
+            'NUM_ORDERS_14': worksheet.cell(row=16, column=column),
+            'NUM_ORDERS_15': worksheet.cell(row=17, column=column),
+            'NUM_ORDERS': worksheet.cell(row=18, column=column),
+            'AVG_WEIGHT_10': worksheet.cell(row=21, column=column),
+            'AVG_WEIGHT_11': worksheet.cell(row=22, column=column),
+            'AVG_WEIGHT_12': worksheet.cell(row=23, column=column),
+            'AVG_WEIGHT_13': worksheet.cell(row=24, column=column),
+            'AVG_WEIGHT_14': worksheet.cell(row=25, column=column),
+            'AVG_WEIGHT_15': worksheet.cell(row=26, column=column),
+            'AVG_WEIGHT': worksheet.cell(row=27, column=column),
+            'WEIGHT_UNDEF': worksheet.cell(row=30, column=column),
+            'NUM_ORDERS_UNDEF': worksheet.cell(row=31, column=column),
+            'AVG_WEIGHT_UNDEF': worksheet.cell(row=32, column=column)
         }
-
-        tonnage_week_column['title'].value = tonnage_week.DELIVERY_WEEK
-
-        tonnage_week_column['weight_10'].value = tonnage_week.WEIGHT_10 or 0
-        tonnage_week_column['weight_11'].value = tonnage_week.WEIGHT_11 or 0
-        tonnage_week_column['weight_12'].value = tonnage_week.WEIGHT_12 or 0
-        tonnage_week_column['weight_13'].value = tonnage_week.WEIGHT_13 or 0
-        tonnage_week_column['weight_14'].value = tonnage_week.WEIGHT_14 or 0
-        tonnage_week_column['weight_15'].value = tonnage_week.WEIGHT_15 or 0
-        tonnage_week_column['weight_total'].value = tonnage_week.WEIGHT or 0
-
-        tonnage_week_column['num_orders_10'].value = tonnage_week.NUM_ORDERS_10 or 0
-        tonnage_week_column['num_orders_11'].value = tonnage_week.NUM_ORDERS_11 or 0
-        tonnage_week_column['num_orders_12'].value = tonnage_week.NUM_ORDERS_12 or 0
-        tonnage_week_column['num_orders_13'].value = tonnage_week.NUM_ORDERS_13 or 0
-        tonnage_week_column['num_orders_14'].value = tonnage_week.NUM_ORDERS_14 or 0
-        tonnage_week_column['num_orders_15'].value = tonnage_week.NUM_ORDERS_15 or 0
-        tonnage_week_column['num_orders_total'].value = tonnage_week.NUM_ORDERS or 0
-
-        tonnage_week_column['avg_weight_10'].value = tonnage_week.AVG_WEIGHT_10 or 0
-        tonnage_week_column['avg_weight_11'].value = tonnage_week.AVG_WEIGHT_11 or 0
-        tonnage_week_column['avg_weight_12'].value = tonnage_week.AVG_WEIGHT_12 or 0
-        tonnage_week_column['avg_weight_13'].value = tonnage_week.AVG_WEIGHT_13 or 0
-        tonnage_week_column['avg_weight_14'].value = tonnage_week.AVG_WEIGHT_14 or 0
-        tonnage_week_column['avg_weight_15'].value = tonnage_week.AVG_WEIGHT_15 or 0
-        tonnage_week_column['avg_weight_total'].value = tonnage_week.AVG_WEIGHT or 0
-
-        tonnage_week_column['weight_undef'].value = tonnage_week.WEIGHT_UNDEF or 0
-        tonnage_week_column['num_orders_undef'].value = tonnage_week.NUM_ORDERS_UNDEF or 0
-        tonnage_week_column['avg_weight_undef'].value = tonnage_week.AVG_WEIGHT_UNDEF or 0
 
         for key, cell in tonnage_week_column.iteritems():
             if key != 'title':
                 cell.number_format = '#,##0'
+
+        for name in tonnage_week_column.keys():
+            tonnage_week_column[name].value = getattr(tonnage_week, name)
 
     def _excel_apply_styling(self, worksheet):
         for spreadsheet_section in ['A', 9, 18, 27]:

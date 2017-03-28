@@ -62,29 +62,30 @@ class OnTimeReport(object):
         return dataset
 
     def apply_calculated_columns(self):
-        self.dataset['ONTIME_APPT'] = self.dataset.apply(
-            lambda row: self.__class__.CalcColumns.ontime_appt(
-                row['DELIVER_BY'].date(),
-                row['RAD']
+        calculated_columns = {
+            'ONTIME_APPT': (
+                lambda row: self.__class__.CalcColumns.ontime_appt(
+                    row['DELIVER_BY'].date(),
+                    row['RAD']
+                )
             ),
-            axis = 1
-        )
-        self.dataset['ONTIME_APPT_REALISTIC'] = self.dataset.apply(
-            lambda row: self.__class__.CalcColumns.ontime_appt_realistic(
-                row['RAD'],
-                row['RPD'],
-                row['CREATED_TIME'].date(),
-                row['DELIVER_BY'].date()
+            'ONTIME_APPT_REALISTIC': (
+                lambda row: self.__class__.CalcColumns.ontime_appt_realistic(
+                    row['RAD'],
+                    row['RPD'],
+                    row['CREATED_TIME'].date(),
+                    row['DELIVER_BY'].date()
+                )
             ),
-            axis = 1
-        )
-        self.dataset['ONTIME_DELV'] = self.dataset.apply(
-            lambda row: self.__class__.CalcColumns.ontime_delv(
-                row['ARRIVED'],
-                row['DELIVER_BY_END']
-            ),
-            axis = 1
-        )
+            'ONTIME_DELV': (
+                lambda row: self.__class__.CalcColumns.ontime_delv(
+                    row['ARRIVED'],
+                    row['DELIVER_BY_END']
+                )
+            )
+        }
+        for name, calculation in calculated_columns.items():
+            self.dataset[name] = self.dataset.apply(calculation, axis = 1)
 
     def get_dataset_of_averages(self):
         numeric_dataset = self.dataset[
@@ -126,46 +127,48 @@ class OnTimeReport(object):
         return virtual_wb
 
     def excel_insert_titles(self, worksheet):
-        worksheet['A1'] = 'DELIVERY WEEK'
+        titles = {
+            'A1': 'DELIVERY WEEK',
+            'A3': 'Appt On Time to RAD',
+            'A4': 'STAL-TERM',
+            'A5': 'COMM-TERM',
+            'A6': 'KELL-TERM',
+            'A7': 'LRFD-TERM',
+            'A8': 'FKSP-TERM',
+            'A9': 'UPPN-TERM',
+            'A10': 'UPPN2-TERM',
+            'A11': 'HESS-TERM',
+            'A12': 'HCIB-TERM',
+            'A13': 'BUBM-TERM',
+            'A14': 'RINF-TERM',
+            'A16': 'Appt On Time to RAD (Realistic)',
+            'A17': 'STAL-TERM',
+            'A18': 'COMM-TERM',
+            'A19': 'KELL-TERM',
+            'A20': 'LRFD-TERM',
+            'A21': 'FKSP-TERM',
+            'A22': 'UPPN-TERM',
+            'A23': 'UPPN2-TERM',
+            'A24': 'HESS-TERM',
+            'A25': 'HCIB-TERM',
+            'A26': 'BUBM-TERM',
+            'A27': 'RINF-TERM',
+            'A29': 'Delv On Time to Appt',
+            'A30': 'STAL-TERM',
+            'A31': 'COMM-TERM',
+            'A32': 'KELL-TERM',
+            'A33': 'LRFD-TERM',
+            'A34': 'FKSP-TERM',
+            'A35': 'UPPN-TERM',
+            'A36': 'UPPN2-TERM',
+            'A37': 'HESS-TERM',
+            'A38': 'HCIB-TERM',
+            'A39': 'BUBM-TERM',
+            'A40': 'RINF-TERM'
+        }
 
-        worksheet['A3'] = 'Appt On Time to RAD'
-        worksheet['A4'] = 'STAL-TERM'
-        worksheet['A5'] = 'COMM-TERM'
-        worksheet['A6'] = 'KELL-TERM'
-        worksheet['A7'] = 'LRFD-TERM'
-        worksheet['A8'] = 'FKSP-TERM'
-        worksheet['A9'] = 'UPPN-TERM'
-        worksheet['A10'] = 'UPPN2-TERM'
-        worksheet['A11'] = 'HESS-TERM'
-        worksheet['A12'] = 'HCIB-TERM'
-        worksheet['A13'] = 'BUBM-TERM'
-        worksheet['A14'] = 'RINF-TERM'
-
-        worksheet['A16'] = 'Appt On Time to RAD (Realistic)'
-        worksheet['A17'] = 'STAL-TERM'
-        worksheet['A18'] = 'COMM-TERM'
-        worksheet['A19'] = 'KELL-TERM'
-        worksheet['A20'] = 'LRFD-TERM'
-        worksheet['A21'] = 'FKSP-TERM'
-        worksheet['A22'] = 'UPPN-TERM'
-        worksheet['A23'] = 'UPPN2-TERM'
-        worksheet['A24'] = 'HESS-TERM'
-        worksheet['A25'] = 'HCIB-TERM'
-        worksheet['A26'] = 'BUBM-TERM'
-        worksheet['A27'] = 'RINF-TERM'
-
-        worksheet['A29'] = 'Delv On Time to Appt'
-        worksheet['A30'] = 'STAL-TERM'
-        worksheet['A31'] = 'COMM-TERM'
-        worksheet['A32'] = 'KELL-TERM'
-        worksheet['A33'] = 'LRFD-TERM'
-        worksheet['A34'] = 'FKSP-TERM'
-        worksheet['A35'] = 'UPPN-TERM'
-        worksheet['A36'] = 'UPPN2-TERM'
-        worksheet['A37'] = 'HESS-TERM'
-        worksheet['A38'] = 'HCIB-TERM'
-        worksheet['A39'] = 'BUBM-TERM'
-        worksheet['A40'] = 'RINF-TERM'
+        for cell, title in titles.items():
+            worksheet[cell] = title
 
     def excel_insert_data(self, worksheet, ontime_week, column, ontime_field, row_offset=0):
         report_column = {
