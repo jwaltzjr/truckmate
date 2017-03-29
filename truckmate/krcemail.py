@@ -52,6 +52,8 @@ class KrcEmail():
     def send(self):
         server = smtplib.SMTP(self.server, self.port)
         server.starttls()
-        server.login(self.send_from, self.password)
-        server.sendmail(self.send_from, self.send_to, self.email.as_string())
-        server.quit()
+        try:
+            server.login(self.send_from, self.password)
+            server.sendmail(self.send_from, self.send_to, self.email.as_string())
+        finally:
+            server.quit()
