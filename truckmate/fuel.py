@@ -7,7 +7,7 @@ import pyodbc
 import xlrd
 
 import database
-from krc.krcemail import KrcEmail
+from truckmate_email import TruckmateEmail
 
 ERROR_EMAIL_ADDRESSES = ['jwaltzjr@krclogistics.com', 'csenti@krclogistics.com']
 DB2_DATABASE = 'STALEY'
@@ -103,7 +103,7 @@ class MarsFuelAverage(CalculatedFuelAverage):
 
 def email_error_message(error_message, email_addresses):
     email_body = 'There was an error with the automatic fuel insert.\n\nError Message:\n{}\n\nITDEPREQ'    
-    email_message = KrcEmail(
+    email_message = TruckmateEmail(
         email_addresses,
         subject='Automatic Fuel Failure',
         message=email_body.format(error_message)

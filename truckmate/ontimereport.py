@@ -6,7 +6,7 @@ import openpyxl
 import pandas
 
 import database
-from krc.krcemail import KrcEmail
+from truckmate_email import TruckmateEmail
 
 REPORT_EMAILS = ['jwaltzjr@krclogistics.com']
 
@@ -204,7 +204,7 @@ class OnTimeReport(object):
 
 def main():
     ontime_report = OnTimeReport('ontimereport.sql', database.truckmate)
-    email_message = KrcEmail(
+    email_message = TruckmateEmail(
         REPORT_EMAILS,
         subject='On Time Report',
         attachments=[
