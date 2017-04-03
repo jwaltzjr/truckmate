@@ -113,7 +113,7 @@ class OnTimeReport(object):
 
         current_column = 1
         current_date = None
-        for row in data.itertuples():
+        for row in data.iloc[::-1].itertuples():
             if row.Index[0] != current_date:
                 current_column += 1
             current_date = row.Index[0]
