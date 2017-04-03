@@ -6,7 +6,7 @@ import openpyxl
 import pandas
 
 import database
-from krc.email import KrcEmail
+from krc.krcemail import KrcEmail
 
 REPORT_EMAILS = ['jwaltzjr@krclogistics.com']
 

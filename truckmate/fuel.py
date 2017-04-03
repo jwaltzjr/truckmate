@@ -7,7 +7,7 @@ import pyodbc
 import xlrd
 
 import database
-from krc.email import KrcEmail
+from krc.krcemail import KrcEmail
 
 ERROR_EMAIL_ADDRESSES = ['jwaltzjr@krclogistics.com', 'csenti@krclogistics.com']
 DB2_DATABASE = 'STALEY'
