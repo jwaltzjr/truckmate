@@ -4,7 +4,7 @@ import sys
 import openpyxl
 
 import database
-import krcemail
+from krc.email import KrcEmail
 
 REPORT_EMAILS = [
     'jwaltzjr@krclogistics.com',
@@ -127,7 +127,7 @@ class TonnageReport(object):
 
 def main():
     tonnage_report = TonnageReport('tonnage.sql', database.truckmate)
-    email_message = krcemail.KrcEmail(
+    email_message = KrcEmail(
         REPORT_EMAILS,
         subject='Weekly Tonnage',
         attachments=[
