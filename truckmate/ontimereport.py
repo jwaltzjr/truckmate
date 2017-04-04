@@ -8,7 +8,15 @@ import pandas
 import database
 from truckmate_email import TruckmateEmail
 
-REPORT_EMAILS = ['jwaltzjr@krclogistics.com']
+REPORT_EMAILS = [
+    'jwaltzjr@krclogistics.com',
+    'jwaltz@krclogistics.com',
+    'dhendriksen@krclogistics.com',
+    'djdevries@krclogistics.com',
+    'tkatsahnias@krclogistics.com',
+    'ekuhowski@krclogistics.com',
+    'dpeach@krclogistics.com'
+]
 
 class OnTimeReport(object):
 
