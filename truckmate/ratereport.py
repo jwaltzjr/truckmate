@@ -55,7 +55,7 @@ class RateReport(object):
             if 600 <= rate.DESTINATION[:3] <= 606:
                 return 'CHICOMM'
             else:
-                return rate.DESINATION[:3]
+                return rate.DESTINATION[:3]
         else:
             return rate.DESTINATION
 
