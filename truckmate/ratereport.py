@@ -82,7 +82,7 @@ class RateReport(object):
                 origins.append(origin)
 
         if rate.ORIGIN:
-            origins.append(origin)
+            origins.append(rate.ORIGIN)
 
         return origins
 
