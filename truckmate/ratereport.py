@@ -1,3 +1,4 @@
+import collections
 import os
 import sys
 
@@ -31,7 +32,7 @@ class RateReport(object):
         wb = openpyxl.Workbook()
         ws = wb.active
 
-        split_data = self.split_dataset()
+        self.split_data = self.split_dataset(self.dataset)
 
         self._excel_insert_titles(ws)
 
@@ -45,17 +46,19 @@ class RateReport(object):
         virtual_wb = openpyxl.writer.excel.save_virtual_workbook(wb)
         return virtual_wb
 
-    def split_dataset(self):
-        split_data = {}
+    def split_dataset(self, dataset):
+        split_data = collections.defaultdict(list)
 
-        # for rate in self.dataset:
+        for rate in dataset:
+            split_data[str(self.get_zone(rate))].append(rate)
+
+        return split_data
 
     def get_zone(self, rate):
         if rate.DESTINATION.isdigit():
             if 600 <= rate.DESTINATION[:3] <= 606:
                 return 'CHICOMM'
             else:
-                return rate.DESTINATION[:3]
         else:
             return rate.DESTINATION
 
@@ -86,8 +89,7 @@ def main():
 
 def test():
     rate_report = RateReport('ratereport.sql', database.truckmate)
-    print rate_report.dataset[0]
-    print rate_report.get_zone(rate_report.dataset[0])
+    print self.split_data['CHICOMM']
 
 if __name__ == '__main__':
     test()
