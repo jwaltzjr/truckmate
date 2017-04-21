@@ -31,6 +31,8 @@ class RateReport(object):
         wb = openpyxl.Workbook()
         ws = wb.active
 
+        split_data = self.split_dataset()
+
         self._excel_insert_titles(ws)
 
         current_column = 2
@@ -42,6 +44,20 @@ class RateReport(object):
 
         virtual_wb = openpyxl.writer.excel.save_virtual_workbook(wb)
         return virtual_wb
+
+    def split_dataset(self):
+        split_data = {}
+
+        # for rate in self.dataset:
+
+    def get_zone(self, rate):
+        if rate.DESTINATION.isdigit():
+            if 600 <= rate.DESINATION[:3] <= 606:
+                return 'CHICOMM'
+            else:
+                return rate.DESINATION[:3]
+        else:
+            return rate.DESTINATION
 
     def _excel_insert_titles(self, worksheet):
         titles = {}
