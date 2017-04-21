@@ -71,7 +71,7 @@ class RateReport(object):
         for rate in dataset:
             for origin in self.get_origins(rate):
                 rate_obj = Rate(rate.TARIFF, rate.CUSTOMERS, origin, rate.DESTINATION, rate.BREAK, rate.RATE)
-                split_data[str(rate_obj.three_digit_zip].append(rate_obj)
+                split_data[str(rate_obj.three_digit_zip)].append(rate_obj)
 
         return split_data
 
