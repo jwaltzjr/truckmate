@@ -90,7 +90,7 @@ def main():
 
 def test():
     rate_report = RateReport('ratereport.sql', database.truckmate)
-    print self.split_data['CHICOMM']
+    print rate_report.split_data['CHICOMM']
 
 if __name__ == '__main__':
     test()
