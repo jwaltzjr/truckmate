@@ -52,7 +52,7 @@ class RateReport(object):
 
     def get_zone(self, rate):
         if rate.DESTINATION.isdigit():
-            if 600 <= rate.DESINATION[:3] <= 606:
+            if 600 <= rate.DESTINATION[:3] <= 606:
                 return 'CHICOMM'
             else:
                 return rate.DESINATION[:3]
