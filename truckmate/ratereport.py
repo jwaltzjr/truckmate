@@ -17,18 +17,19 @@ class Rate(object):
         self.tariff = tariff
         self.customers = customers
         self.origin = origin
-        self.destination = self.get_zone(destination)
+        self.destination = destination
         self.rate_break = rate_break
         self.rate = rate
 
-    def get_zone(self, destination):
-        if destination.isdigit():
-            if 600 <= destination[:3] <= 606:
+    @property
+    def three_digit_zip(self):
+        if self.destination.isdigit():
+            if 600 <= self.destination[:3] <= 606:
                 return 'CHICOMM'
             else:
-                return destination[:3]
+                return self.destination[:3]
         else:
-            return destination
+            return self.destination
 
 class RateReport(object):
 
@@ -70,7 +71,7 @@ class RateReport(object):
         for rate in dataset:
             for origin in self.get_origins(rate):
                 rate_obj = Rate(rate.TARIFF, rate.CUSTOMERS, origin, rate.DESTINATION, rate.BREAK, rate.RATE)
-                split_data[str(rate_obj.get_zone())].append(rate_obj)
+                split_data[str(rate_obj.three_digit_zip].append(rate_obj)
 
         return split_data
 
