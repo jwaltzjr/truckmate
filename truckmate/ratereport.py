@@ -84,5 +84,10 @@ def main():
     )
     email_message.send()
 
+def test():
+    rate_report = RateReport('ratereport.sql', database.truckmate)
+    print rate_report.dataset[0]
+    print rate_report.dataset[0].get_zone
+
 if __name__ == '__main__':
-    main()
+    test()
