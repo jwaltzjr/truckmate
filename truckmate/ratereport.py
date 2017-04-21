@@ -17,6 +17,7 @@ class RateReport(object):
         sql_file_path = os.path.join(sys.path[0], file_name)
         self.sql_query = self.load_query_from_file(sql_file_path)
         self.dataset = self.fetch_data_from_db(self.sql_query, datab)
+        self.split_data = self.split_dataset(self.dataset)
 
     def load_query_from_file(self, file_path):
         with open(file_path, 'r') as sql_file:
@@ -31,8 +32,6 @@ class RateReport(object):
     def export_as_xlsx(self):
         wb = openpyxl.Workbook()
         ws = wb.active
-
-        self.split_data = self.split_dataset(self.dataset)
 
         self._excel_insert_titles(ws)
 
