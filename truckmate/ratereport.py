@@ -21,6 +21,15 @@ class Rate(object):
         self.rate_break = rate_break
         self.rate = rate
 
+    def __repr__(self):
+        return 'Rate(tariff=%s, origin=%s, dest=%s, break=%s, rate=%s)' % (
+            self.tariff,
+            self.origin,
+            self.destination,
+            self.rate_break,
+            self.rate
+        )
+
     @property
     def three_digit_zip(self):
         if self.destination.isdigit():
