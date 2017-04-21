@@ -87,7 +87,7 @@ def main():
 def test():
     rate_report = RateReport('ratereport.sql', database.truckmate)
     print rate_report.dataset[0]
-    print rate_report.dataset[0].get_zone
+    print rate_report.get_zone(rate_report.dataset[0])
 
 if __name__ == '__main__':
     test()
