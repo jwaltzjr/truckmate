@@ -11,6 +11,25 @@ REPORT_EMAILS = [
     'jwaltzjr@krclogistics.com'
 ]
 
+class Rate(object):
+
+    def __init__(self, tariff, customers, origin, destination, rate_break, rate):
+        self.tariff = tariff
+        self.customers = customers
+        self.origin = origin
+        self.destination = self.get_zone(destination)
+        self.rate_break = rate_break
+        self.rate = rate
+
+    def get_zone(self, destination):
+        if destination.isdigit():
+            if 600 <= destination[:3] <= 606:
+                return 'CHICOMM'
+            else:
+                return destination[:3]
+        else:
+            return destination
+
 class RateReport(object):
 
     def __init__(self, file_name, datab):
@@ -49,18 +68,23 @@ class RateReport(object):
         split_data = collections.defaultdict(list)
 
         for rate in dataset:
-            split_data[str(self.get_zone(rate))].append(rate)
+            for origin in self.get_origins(rate):
+                rate_obj = Rate(rate.TARIFF, rate.CUSTOMERS, origin, rate.DESTINATION, rate.BREAK, rate.RATE)
+                split_data[str(rate_obj.get_zone())].append(rate_obj)
 
         return split_data
 
-    def get_zone(self, rate):
-        if rate.DESTINATION.isdigit():
-            if 600 <= rate.DESTINATION[:3] <= 606:
-                return 'CHICOMM'
-            else:
-                return rate.DESTINATION[:3]
-        else:
-            return rate.DESTINATION
+    def get_origins(self, rate):
+        origins = []
+
+        if rate.ORIGIN_MS:
+            for origin in rate.ORIGIN_MS.split(', '):
+                origins.append(origin)
+
+        if rate.ORIGIN:
+            origins.append(origin)
+
+        return origins
 
     def _excel_insert_titles(self, worksheet):
         titles = {}
@@ -89,7 +113,7 @@ def main():
 
 def test():
     rate_report = RateReport('ratereport.sql', database.truckmate)
-    print rate_report.split_data['CHICOMM']
+    print rate_report.split_data['432']
 
 if __name__ == '__main__':
     test()
