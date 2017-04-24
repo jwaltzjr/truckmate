@@ -56,6 +56,13 @@ class RateReport(object):
         self.dataset = self.fetch_data_from_db(self.sql_query, datab)
         self.split_data = self.split_dataset(self.dataset)
 
+        # split_data is a dict like this:
+        # split_data = {
+        #     '3-digit-zip': {
+        #         tariff: [rates]
+        #     }
+        # }
+
     def load_query_from_file(self, file_path):
         with open(file_path, 'r') as sql_file:
             return sql_file.read()
@@ -83,12 +90,15 @@ class RateReport(object):
         return virtual_wb
 
     def split_dataset(self, dataset):
-        split_data = collections.defaultdict(list)
+        split_data = collections.defaultdict(
+            collections.defaultdict(list)
+        )
 
         for rate in dataset:
             for origin in self.get_origins(rate):
                 rate_obj = Rate(rate.TARIFF, rate.CUSTOMERS, origin, rate.DESTINATION, rate.BREAK, rate.IS_MIN, rate.RATE)
-                split_data[str(rate_obj.three_digit_zip)].append(rate_obj)
+                rate_tup = (rate_obj.tariff, rate_obj.customers, rate_obj.origin)
+                split_data[str(rate_obj.three_digit_zip)][rate_tup].append(rate_obj)
 
         return split_data
 
