@@ -91,7 +91,7 @@ class RateReport(object):
 
     def split_dataset(self, dataset):
         split_data = collections.defaultdict(
-            collections.defaultdict(list)
+            lambda: collections.defaultdict(list)
         )
 
         for rate in dataset:
