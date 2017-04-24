@@ -13,12 +13,13 @@ REPORT_EMAILS = [
 
 class Rate(object):
 
-    def __init__(self, tariff, customers, origin, destination, rate_break, rate):
+    def __init__(self, tariff, customers, origin, destination, break_value, is_min, rate):
         self.tariff = tariff
         self.customers = customers
         self.origin = origin
         self.destination = destination
-        self.rate_break = rate_break
+        self.break_value = break_value
+        self.is_min = is_min
         self.rate = rate
 
     def __repr__(self):
@@ -39,6 +40,13 @@ class Rate(object):
                 return self.destination[:3]
         else:
             return self.destination
+
+    @property
+    def rate_break(self):
+        if self.is_min:
+            return 'MIN'
+        else:
+            return self.break_value
 
 class RateReport(object):
 
@@ -97,7 +105,12 @@ class RateReport(object):
         return origins
 
     def _excel_insert_titles(self, worksheet):
-        titles = {}
+        titles = {
+            'A1': 'TARIFF',
+            'A3': 'CUSTOMER',
+            'A4': 'ORIGIN',
+            'A5': 'MIN'
+        }
 
         for cell, title in titles.items():
             worksheet[cell] = title
