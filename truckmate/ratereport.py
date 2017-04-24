@@ -19,7 +19,7 @@ class Rate(object):
         self.origin = origin
         self.destination = destination
         self.break_value = break_value
-        self.is_min = is_min
+        self.is_min = (is_min.strip() == 'True')
         self.rate = rate
 
     def __repr__(self):
