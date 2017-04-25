@@ -139,7 +139,10 @@ class RateReport(object):
             worksheet.cell(row=current_row, column=4).value = destination
             for rate in rates:
                 current_column = self.find_column(worksheet, rate.rate_break)
-                worksheet.cell(row=current_row, column=current_column).value = rate.rate
+                current_cell = worksheet.cell(row=current_row, column=current_column)
+                current_cell.value = rate.rate
+                current_cell.number_format = '#,##0.00'
+
             current_row += 1
 
     def find_column(self, worksheet, header):
