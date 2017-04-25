@@ -75,14 +75,21 @@ class RateReport(object):
 
     def split_dataset(self, dataset):
         split_data = collections.defaultdict(
-            lambda: collections.defaultdict(list)
+            lambda: {
+                'breaks': set(),
+                'rates': collections.defaultdict(list)
+            }
         )
 
         for rate in dataset:
             for origin in self.get_origins(rate):
                 rate_obj = Rate(rate.TARIFF, rate.CUSTOMERS, origin, rate.DESTINATION, rate.BREAK, rate.IS_MIN, rate.RATE)
+
+                if rate_obj.rate_break not in split_data[rate_obj.three_digit_zip]['breaks']:
+                    split_data[rate_obj.three_digit_zip]['breaks'].add(rate_obj.rate_break)
+
                 rate_tup = (rate_obj.tariff, rate_obj.customers, rate_obj.origin)
-                split_data[str(rate_obj.three_digit_zip)][rate_tup].append(rate_obj)
+                split_data[rate_obj.three_digit_zip]['rates'][rate_tup].append(rate_obj)
 
         return split_data
 
