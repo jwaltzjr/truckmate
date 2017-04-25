@@ -152,9 +152,5 @@ def main():
     )
     email_message.send()
 
-def test():
-    rate_report = RateReport('ratereport.sql', database.truckmate)
-    print rate_report.split_data['432']
-
 if __name__ == '__main__':
-    test()
+    main()
