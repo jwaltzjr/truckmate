@@ -38,6 +38,8 @@ class Rate(object):
                 return 'CHICOMM'
             else:
                 return self.destination[:3]
+        elif self.destination == 'CHICOMM':
+            return 'CHICOMM'
         elif self.destination in ['497LP', '497UP']:
             return '497'
         else:
