@@ -34,7 +34,7 @@ class Rate(object):
     @property
     def three_digit_zip(self):
         if self.destination.isdigit():
-            if 600 <= self.destination[:3] <= 606:
+            if 600 <= int(self.destination[:3]) <= 606:
                 return 'CHICOMM'
             else:
                 return self.destination[:3]
