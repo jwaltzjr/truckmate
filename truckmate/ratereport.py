@@ -57,13 +57,6 @@ class RateReport(object):
         self.dataset = self.fetch_data_from_db(self.sql_query, datab)
         self.split_data = self.split_dataset(self.dataset)
 
-        # split_data is a dict like this:
-        # split_data = {
-        #     '3-digit-zip': {
-        #         tariff: [rates]
-        #     }
-        # }
-
     def load_query_from_file(self, file_path):
         with open(file_path, 'r') as sql_file:
             return sql_file.read()
