@@ -126,7 +126,7 @@ class RateReport(object):
         }
 
         col = 6
-        for b in sorted(split_data[zone]['breaks']):
+        for b in sorted(self.split_data[zone]['breaks']):
             headercell = 'A' + col
             titles[cell] = b
 
