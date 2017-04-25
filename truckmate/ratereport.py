@@ -121,15 +121,16 @@ class RateReport(object):
     def _excel_insert_titles(self, worksheet, zone):
         titles = {
             'A1': 'TARIFF',
-            'A3': 'CUSTOMER',
-            'A4': 'ORIGIN',
-            'A5': 'MIN'
+            'B1': 'CUSTOMER',
+            'C1': 'ORIGIN',
+            'D1': 'MIN'
         }
 
-        col = 6
+        row = 'E'
         for b in sorted(self.split_data[zone]['breaks']):
-            cellname = 'A' + str(col)
+            cellname = row + str(1)
             titles[cellname] = b
+            row = chr(ord(row) + 1)
 
         for cell, title in titles.items():
             worksheet[cell] = title
