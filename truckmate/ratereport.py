@@ -109,25 +109,26 @@ class RateReport(object):
         wb = openpyxl.Workbook()
         ws = wb.active
 
-        self._excel_insert_titles(ws)
-
-        current_column = 2
-        for rate_cell in self.dataset:
-            self._excel_insert_data(ws, rate_cell, current_column)
-            current_column += 1
-
+        current_zone = '432'
+        self._excel_insert_titles(ws, current_zone)
+        self._excel_insert_data(ws)
         self._excel_apply_styling(ws)
 
         virtual_wb = openpyxl.writer.excel.save_virtual_workbook(wb)
         return virtual_wb
 
-    def _excel_insert_titles(self, worksheet):
+    def _excel_insert_titles(self, worksheet, zone):
         titles = {
             'A1': 'TARIFF',
             'A3': 'CUSTOMER',
             'A4': 'ORIGIN',
             'A5': 'MIN'
         }
+
+        col = 6
+        for b in sorted(split_data[zone]['breaks']):
+            headercell = 'A' + col
+            titles[cell] = b
 
         for cell, title in titles.items():
             worksheet[cell] = title
