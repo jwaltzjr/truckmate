@@ -107,7 +107,6 @@ class RateReport(object):
         current_zone = '432'
         self._excel_insert_titles(ws, current_zone)
         self._excel_insert_data(ws, current_zone)
-        self._excel_apply_styling(ws)
 
         virtual_wb = openpyxl.writer.excel.save_virtual_workbook(wb)
         return virtual_wb
@@ -149,10 +148,6 @@ class RateReport(object):
                 return cell.col_idx
         else:
             raise ValueError('No header found for %s' % header)
-
-    def _excel_apply_styling(self, worksheet):
-        # APPLY STYLING HERE
-        return
 
 def main():
     rate_report = RateReport('ratereport.sql', database.truckmate)
