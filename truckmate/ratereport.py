@@ -132,7 +132,7 @@ class RateReport(object):
 
     def _excel_insert_data(self, worksheet, zone):
         current_row = 2
-        for tariff_tup, rates in self.split_data[zone]['rates'].iteritems():
+        for tariff_tup, rates in sorted(self.split_data[zone]['rates'].iteritems()):
             tariff, customers, origin, destination = tariff_tup
             worksheet.cell(row=current_row, column=1).value = tariff
             worksheet.cell(row=current_row, column=2).value = customers
