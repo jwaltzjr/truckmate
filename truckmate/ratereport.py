@@ -83,7 +83,7 @@ class RateReport(object):
                     if not rate_obj.is_min:
                         split_data[rate_obj.three_digit_zip]['breaks'].add(rate_obj.rate_break)
 
-                rate_tup = (rate_obj.tariff, rate_obj.customers, rate_obj.origin)
+                rate_tup = (rate_obj.tariff, rate_obj.customers, rate_obj.origin, rate_obj.destination)
                 split_data[rate_obj.three_digit_zip]['rates'][rate_tup].append(rate_obj)
 
         return split_data
@@ -117,10 +117,11 @@ class RateReport(object):
             'A1': 'TARIFF',
             'B1': 'CUSTOMER',
             'C1': 'ORIGIN',
-            'D1': 'MIN'
+            'D1': 'DESTINATION',
+            'E1': 'MIN'
         }
 
-        row = 'E'
+        row = 'F'
         for b in sorted(self.split_data[zone]['breaks']):
             cellname = row + str(1)
             titles[cellname] = b
@@ -132,10 +133,11 @@ class RateReport(object):
     def _excel_insert_data(self, worksheet, zone):
         current_row = 2
         for tariff_tup, rates in self.split_data[zone]['rates'].iteritems():
-            tariff, customers, origin = tariff_tup
+            tariff, customers, origin, destination = tariff_tup
             worksheet.cell(row=current_row, column=1).value = tariff
             worksheet.cell(row=current_row, column=2).value = customers
             worksheet.cell(row=current_row, column=3).value = origin
+            worksheet.cell(row=current_row, column=4).value = destination
             for rate in rates:
                 current_column = self.find_column(worksheet, rate.rate_break)
                 worksheet.cell(row=current_row, column=current_column).value = rate.rate
