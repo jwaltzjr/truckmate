@@ -133,7 +133,7 @@ class RateReport(object):
         for cell, title in titles.items():
             worksheet[cell] = title
 
-    def _excel_insert_data(self, worksheet, rate_cell, column):
+    def _excel_insert_data(self, worksheet):
         # INSERT DATA HERE
         return
 
