@@ -102,11 +102,12 @@ class RateReport(object):
 
     def export_as_xlsx(self):
         wb = openpyxl.Workbook()
-        ws = wb.active
+        wb.remove_sheet(wb.active)
 
-        current_zone = '432'
-        self._excel_insert_titles(ws, current_zone)
-        self._excel_insert_data(ws, current_zone)
+        for zone in sorted(self.split_data.keys()):
+            ws = wb.create_sheet(zone)
+            self._excel_insert_titles(ws, zone)
+            self._excel_insert_data(ws, zone)
 
         virtual_wb = openpyxl.writer.excel.save_virtual_workbook(wb)
         return virtual_wb
