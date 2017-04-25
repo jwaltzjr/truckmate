@@ -147,7 +147,7 @@ def main():
         REPORT_EMAILS,
         subject='Rate Report',
         attachments=[
-            ('rate_report.xlsx', tonnage_report.export_as_xlsx())
+            ('rate_report.xlsx', rate_report.export_as_xlsx())
         ]
     )
     email_message.send()
