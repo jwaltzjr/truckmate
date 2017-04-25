@@ -113,7 +113,7 @@ class RateReport(object):
 
         current_zone = '432'
         self._excel_insert_titles(ws, current_zone)
-        self._excel_insert_data(ws)
+        self._excel_insert_data(ws, current_zone)
         self._excel_apply_styling(ws)
 
         virtual_wb = openpyxl.writer.excel.save_virtual_workbook(wb)
@@ -136,9 +136,24 @@ class RateReport(object):
         for cell, title in titles.items():
             worksheet[cell] = title
 
-    def _excel_insert_data(self, worksheet):
-        # INSERT DATA HERE
-        return
+    def _excel_insert_data(self, worksheet, zone):
+        current_row = 2
+        for tariff_tup, rates in self.split_data[zone]['rates'].iteritems():
+            tariff, customers, origin = tariff_tup
+            worksheet.cell(row=current_row, column=1).value = tariff
+            worksheet.cell(row=current_row, column=2).value = customers
+            worksheet.cell(row=current_row, column=3).value = origin
+            for rate in rates:
+                current_column = self.find_column(worksheet, rate.rate_break)
+                worksheet.cell(row=current_row, column=current_column).value = rate.rate
+            current_row += 1
+
+    def find_column(self, worksheet, header):
+        for cell in worksheet[1]:
+            if cell.value == header:
+                return cell.col_idx
+        else:
+            raise ValueError('No header found for %s' % header)
 
     def _excel_apply_styling(self, worksheet):
         # APPLY STYLING HERE
