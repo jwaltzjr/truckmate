@@ -127,8 +127,8 @@ class RateReport(object):
 
         col = 6
         for b in sorted(self.split_data[zone]['breaks']):
-            headercell = 'A' + str(col)
-            titles[cell] = b
+            cellname = 'A' + str(col)
+            titles[cellname] = b
 
         for cell, title in titles.items():
             worksheet[cell] = title
