@@ -46,8 +46,8 @@ class Rate(object):
         if self.is_min:
             return 'MIN'
         else:
-            rounded_break = round(self.break_value / 500.0) * 500.0
-            return rounded_break
+            rounded_break = round(self.break_value / 100.0) * 100.0
+            return rounded_breakA
 
 class RateReport(object):
 
