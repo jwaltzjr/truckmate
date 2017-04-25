@@ -86,7 +86,8 @@ class RateReport(object):
                 rate_obj = Rate(rate.TARIFF, rate.CUSTOMERS, origin, rate.DESTINATION, rate.BREAK, rate.IS_MIN, rate.RATE)
 
                 if rate_obj.rate_break not in split_data[rate_obj.three_digit_zip]['breaks']:
-                    split_data[rate_obj.three_digit_zip]['breaks'].add(rate_obj.rate_break)
+                    if not rate_obj.is_min:
+                        split_data[rate_obj.three_digit_zip]['breaks'].add(rate_obj.rate_break)
 
                 rate_tup = (rate_obj.tariff, rate_obj.customers, rate_obj.origin)
                 split_data[rate_obj.three_digit_zip]['rates'][rate_tup].append(rate_obj)
