@@ -12,11 +12,18 @@ REPORT_EMAILS = [
 
 class CustomerSummary(object):
 
-    def __init__(self, customer, file_name, datab):
-        sql_file_path = os.path.join(sys.path[0], file_name)
-        self.sql_query = self.load_query_from_file(sql_file_path)
-        # Must include customer twice to fill the query slots
-        self.dataset = self.fetch_data_from_db(self.sql_query, datab, customer, customer)
+    def __init__(self, customer, datab):
+        self.reports = [
+            'bymonth',
+            # 'bycommodity'
+        ]
+        self.dataset = {}
+
+        for report in self.reports:
+            sql_file_path = os.path.join(sys.path[0], 'customer_summary_{}.sql'.format(report))
+            self.sql_query = self.load_query_from_file(sql_file_path)
+            # Must include customer twice to fill the query slots
+            self.dataset[report] = self.fetch_data_from_db(self.sql_query, datab, customer, customer)
 
     def load_query_from_file(self, file_path):
         with open(file_path, 'r') as sql_file:
@@ -30,16 +37,16 @@ class CustomerSummary(object):
 
     def export_as_xlsx(self):
         wb = openpyxl.Workbook()
-        ws = wb.active
+        wb.remove_sheet(wb.active)
 
-        self._excel_insert_titles(ws)
-
-        current_row = 2
-        for customer_data in self.dataset:
-            self._excel_insert_data(ws, customer_data, current_row)
-            current_row += 1
-
-        self._excel_apply_styling(ws)
+        for report in self.reports:
+            ws = wb.create_sheet(report)
+            self._excel_insert_titles(ws)
+            current_row = 2
+            for customer_data in self.dataset[report]:
+                self._excel_insert_data(ws, customer_data, current_row)
+                current_row += 1
+            self._excel_apply_styling(ws)
 
         virtual_wb = openpyxl.writer.excel.save_virtual_workbook(wb)
         return virtual_wb
@@ -85,7 +92,6 @@ class CustomerSummary(object):
 def main():
     customer_summary = CustomerSummary(
         'NESTILDEKA',
-        'customer_summary_bymonth.sql',
         database.truckmate
     )
     email_message = TruckmateEmail(
