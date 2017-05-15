@@ -83,11 +83,15 @@ class CustomerSummary(object):
             summary_row[name].value = getattr(customer_data, name)
 
     def _excel_apply_styling(self, worksheet):
-        # for spreadsheet_section in ['A', 9, 18, 27]:
-        #     for cell in worksheet[spreadsheet_section]:
-        #         cell.font = cell.font.copy(bold=True)
-        # for cell in ['A1', 'A8', 'A17', 'A26']:
-        #     worksheet[cell].font = worksheet[cell].font.copy(underline='single')
+        bolded_sections = ['A', 1]
+        # Add 'TOTAL' row to bolded items
+        for cell in worksheet['A']:
+            if cell.value == 'TOTAL':
+                bolded_sections.append(cell.row)
+
+        for spreadsheet_section in bolded_sections:
+            for cell in worksheet[spreadsheet_section]:
+                cell.font = cell.font.copy(bold=True)
 
 def main():
     customer_summary = CustomerSummary(
