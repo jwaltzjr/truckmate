@@ -1,3 +1,4 @@
+import collections
 import os
 import sys
 
@@ -10,20 +11,22 @@ REPORT_EMAILS = [
     'jwaltzjr@krclogistics.com'
 ]
 
+SummaryReport = collections.namedtuple('SummaryReport', ['name', 'grouping'])
+
 class CustomerSummary(object):
 
     def __init__(self, customer, datab):
         self.reports = [
-            'bymonth',
-            # 'bycommodity'
+            SummaryReport('bymonth', 'MONTH'),
+            SummaryReport('bycommodity', 'COMMODITY')
         ]
         self.dataset = {}
 
         for report in self.reports:
-            sql_file_path = os.path.join(sys.path[0], 'customer_summary_{}.sql'.format(report))
+            sql_file_path = os.path.join(sys.path[0], 'customer_summary_{}.sql'.format(report.name))
             self.sql_query = self.load_query_from_file(sql_file_path)
             # Must include customer twice to fill the query slots
-            self.dataset[report] = self.fetch_data_from_db(self.sql_query, datab, customer, customer)
+            self.dataset[report.name] = self.fetch_data_from_db(self.sql_query, datab, customer, customer)
 
     def load_query_from_file(self, file_path):
         with open(file_path, 'r') as sql_file:
@@ -40,20 +43,20 @@ class CustomerSummary(object):
         wb.remove_sheet(wb.active)
 
         for report in self.reports:
-            ws = wb.create_sheet(report)
-            self._excel_insert_titles(ws)
+            ws = wb.create_sheet(report.name)
+            self._excel_summary_insert_titles(ws, report.grouping)
             current_row = 2
-            for customer_data in self.dataset[report]:
-                self._excel_insert_data(ws, customer_data, current_row)
+            for customer_data in self.dataset[report.name]:
+                self._excel_summary_insert_data(ws, customer_data, current_row, report.grouping)
                 current_row += 1
-            self._excel_apply_styling(ws)
+            self._excel_summary_apply_styling(ws)
 
         virtual_wb = openpyxl.writer.excel.save_virtual_workbook(wb)
         return virtual_wb
 
-    def _excel_insert_titles(self, worksheet):
+    def _excel_summary_insert_titles(self, worksheet, grouping):
         titles = {
-            'A1': 'MONTH',
+            'A1': grouping,
             'B1': 'SHIPMENTS',
             'C1': 'TOTAL LBS',
             'D1': 'TOTAL PLT',
@@ -67,9 +70,9 @@ class CustomerSummary(object):
             worksheet[cell] = title
 
 
-    def _excel_insert_data(self, worksheet, customer_data, current_row):
+    def _excel_summary_insert_data(self, worksheet, customer_data, current_row, grouping):
         summary_row = {
-            'MONTH': worksheet.cell(row=current_row, column=1),
+            grouping: worksheet.cell(row=current_row, column=1),
             'SHIPMENTS': worksheet.cell(row=current_row, column=2),
             'TOTAL LBS': worksheet.cell(row=current_row, column=3),
             'TOTAL PLT': worksheet.cell(row=current_row, column=4),
@@ -82,7 +85,7 @@ class CustomerSummary(object):
         for name in summary_row.keys():
             summary_row[name].value = getattr(customer_data, name)
 
-    def _excel_apply_styling(self, worksheet):
+    def _excel_summary_apply_styling(self, worksheet):
         bolded_sections = ['A', 1]
         # Add 'TOTAL' row to bolded items
         for cell in worksheet['A']:
