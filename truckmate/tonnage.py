@@ -89,14 +89,14 @@ class TonnageReport(object):
             'A36': 'PALLETS UNDEF',
             'A37': 'PALLETS TOTAL',
 
-            'A39': 'AVG PALLETS 10',
-            'A40': 'AVG PALLETS 11',
-            'A41': 'AVG PALLETS 12',
-            'A42': 'AVG PALLETS 13',
-            'A43': 'AVG PALLETS 14',
-            'A44': 'AVG PALLETS 15',
-            'A45': 'AVG PALLETS UNDEF',
-            'A46': 'AVG PALLETS TOTAL',
+            'A39': 'AVG LBS/PLT 10',
+            'A40': 'AVG LBS/PLT 11',
+            'A41': 'AVG LBS/PLT 12',
+            'A42': 'AVG LBS/PLT 13',
+            'A43': 'AVG LBS/PLT 14',
+            'A44': 'AVG LBS/PLT 15',
+            'A45': 'AVG LBS/PLT UNDEF',
+            'A46': 'AVG LBS/PLT TOTAL',
 
             'A48': 'POSITIONS 10',
             'A49': 'POSITIONS 11',
@@ -107,14 +107,14 @@ class TonnageReport(object):
             'A54': 'POSITIONS UNDEF',
             'A55': 'POSITIONS TOTAL',
 
-            'A57': 'AVG POSITIONS 10',
-            'A58': 'AVG POSITIONS 11',
-            'A59': 'AVG POSITIONS 12',
-            'A60': 'AVG POSITIONS 13',
-            'A61': 'AVG POSITIONS 14',
-            'A62': 'AVG POSITIONS 15',
-            'A63': 'AVG POSITIONS UNDEF',
-            'A64': 'AVG POSITIONS TOTAL'
+            'A57': 'AVG LBS/POS 10',
+            'A58': 'AVG LBS/POS 11',
+            'A59': 'AVG LBS/POS 12',
+            'A60': 'AVG LBS/POS 13',
+            'A61': 'AVG LBS/POS 14',
+            'A62': 'AVG LBS/POS 15',
+            'A63': 'AVG LBS/POS UNDEF',
+            'A64': 'AVG LBS/POS TOTAL'
         }
 
         for cell, title in titles.items():
@@ -161,14 +161,14 @@ class TonnageReport(object):
             'PALLETS_UNDEF': worksheet.cell(row=36, column=column),
             'PALLETS': worksheet.cell(row=37, column=column),
 
-            'AVG_PALLETS_10': worksheet.cell(row=39, column=column),
-            'AVG_PALLETS_11': worksheet.cell(row=40, column=column),
-            'AVG_PALLETS_12': worksheet.cell(row=41, column=column),
-            'AVG_PALLETS_13': worksheet.cell(row=42, column=column),
-            'AVG_PALLETS_14': worksheet.cell(row=43, column=column),
-            'AVG_PALLETS_15': worksheet.cell(row=44, column=column),
-            'AVG_PALLETS_UNDEF': worksheet.cell(row=45, column=column),
-            'AVG_PALLETS': worksheet.cell(row=46, column=column),
+            'AVG_LBS_PLT_10': worksheet.cell(row=39, column=column),
+            'AVG_LBS_PLT_11': worksheet.cell(row=40, column=column),
+            'AVG_LBS_PLT_12': worksheet.cell(row=41, column=column),
+            'AVG_LBS_PLT_13': worksheet.cell(row=42, column=column),
+            'AVG_LBS_PLT_14': worksheet.cell(row=43, column=column),
+            'AVG_LBS_PLT_15': worksheet.cell(row=44, column=column),
+            'AVG_LBS_PLT_UNDEF': worksheet.cell(row=45, column=column),
+            'AVG_LBS_PLT': worksheet.cell(row=46, column=column),
 
             'POSITIONS_10': worksheet.cell(row=48, column=column),
             'POSITIONS_11': worksheet.cell(row=49, column=column),
@@ -179,14 +179,14 @@ class TonnageReport(object):
             'POSITIONS_UNDEF': worksheet.cell(row=54, column=column),
             'POSITIONS': worksheet.cell(row=55, column=column),
 
-            'AVG_POSITIONS_10': worksheet.cell(row=57, column=column),
-            'AVG_POSITIONS_11': worksheet.cell(row=58, column=column),
-            'AVG_POSITIONS_12': worksheet.cell(row=59, column=column),
-            'AVG_POSITIONS_13': worksheet.cell(row=60, column=column),
-            'AVG_POSITIONS_14': worksheet.cell(row=61, column=column),
-            'AVG_POSITIONS_15': worksheet.cell(row=62, column=column),
-            'AVG_POSITIONS_UNDEF': worksheet.cell(row=63, column=column),
-            'AVG_POSITIONS': worksheet.cell(row=64, column=column)
+            'AVG_LBS_POS_10': worksheet.cell(row=57, column=column),
+            'AVG_LBS_POS_11': worksheet.cell(row=58, column=column),
+            'AVG_LBS_POS_12': worksheet.cell(row=59, column=column),
+            'AVG_LBS_POS_13': worksheet.cell(row=60, column=column),
+            'AVG_LBS_POS_14': worksheet.cell(row=61, column=column),
+            'AVG_LBS_POS_15': worksheet.cell(row=62, column=column),
+            'AVG_LBS_POS_UNDEF': worksheet.cell(row=63, column=column),
+            'AVG_LBS_POS': worksheet.cell(row=64, column=column)
         }
 
         for key, cell in tonnage_week_column.iteritems():
