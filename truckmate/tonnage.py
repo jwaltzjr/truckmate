@@ -13,7 +13,8 @@ REPORT_EMAILS = [
     'djdevries@krclogistics.com',
     'tkatsahnias@krclogistics.com',
     'ekuhowski@krclogistics.com',
-    'dpeach@krclogistics.com'
+    'dpeach@krclogistics.com',
+    'mbrieger@krclogistics.com'
 ]
 
 class TonnageReport(object):
