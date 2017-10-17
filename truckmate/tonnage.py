@@ -13,7 +13,8 @@ REPORT_EMAILS = [
     'djdevries@krclogistics.com',
     'tkatsahnias@krclogistics.com',
     'ekuhowski@krclogistics.com',
-    'dpeach@krclogistics.com',
+    'traffic@krclogistics.com',
+    'pvandyke@krclogistics.com',
     'mbrieger@krclogistics.com'
 ]
 
