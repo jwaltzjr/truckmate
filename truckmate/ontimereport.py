@@ -126,8 +126,8 @@ class OnTimeReport(object):
                 current_column += 1
             current_date = row.Index[0]
             self.excel_insert_data(ws, row, current_column, 'ONTIME_APPT')
-            self.excel_insert_data(ws, row, current_column, 'ONTIME_APPT_REALISTIC', row_offset=13)
-            self.excel_insert_data(ws, row, current_column, 'ONTIME_DELV', row_offset=26)
+            self.excel_insert_data(ws, row, current_column, 'ONTIME_APPT_REALISTIC', row_offset=14)
+            self.excel_insert_data(ws, row, current_column, 'ONTIME_DELV', row_offset=28)
 
         self.excel_apply_styling(ws)
 
@@ -149,30 +149,33 @@ class OnTimeReport(object):
             'A12': 'HCIB-TERM',
             'A13': 'BUBM-TERM',
             'A14': 'RINF-TERM',
-            'A16': 'Appt On Time to RAD (Realistic)',
-            'A17': 'STAL-TERM',
-            'A18': 'COMM-TERM',
-            'A19': 'KELL-TERM',
-            'A20': 'LRFD2-TERM',
-            'A21': 'FKSP-TERM',
-            'A22': 'UPPN-TERM',
-            'A23': 'UPPN2-TERM',
-            'A24': 'HESS-TERM',
-            'A25': 'HCIB-TERM',
-            'A26': 'BUBM-TERM',
-            'A27': 'RINF-TERM',
-            'A29': 'Delv On Time to Appt',
-            'A30': 'STAL-TERM',
-            'A31': 'COMM-TERM',
-            'A32': 'KELL-TERM',
-            'A33': 'LRFD2-TERM',
-            'A34': 'FKSP-TERM',
-            'A35': 'UPPN-TERM',
-            'A36': 'UPPN2-TERM',
-            'A37': 'HESS-TERM',
-            'A38': 'HCIB-TERM',
-            'A39': 'BUBM-TERM',
-            'A40': 'RINF-TERM'
+            'A15': 'CHRB-TERM',
+            'A17': 'Appt On Time to RAD (Realistic)',
+            'A18': 'STAL-TERM',
+            'A19': 'COMM-TERM',
+            'A20': 'KELL-TERM',
+            'A21': 'LRFD2-TERM',
+            'A22': 'FKSP-TERM',
+            'A23': 'UPPN-TERM',
+            'A24': 'UPPN2-TERM',
+            'A25': 'HESS-TERM',
+            'A26': 'HCIB-TERM',
+            'A27': 'BUBM-TERM',
+            'A28': 'RINF-TERM',
+            'A29': 'CHRB-TERM',
+            'A31': 'Delv On Time to Appt',
+            'A32': 'STAL-TERM',
+            'A33': 'COMM-TERM',
+            'A34': 'KELL-TERM',
+            'A35': 'LRFD2-TERM',
+            'A36': 'FKSP-TERM',
+            'A37': 'UPPN-TERM',
+            'A38': 'UPPN2-TERM',
+            'A39': 'HESS-TERM',
+            'A40': 'HCIB-TERM',
+            'A41': 'BUBM-TERM',
+            'A42': 'RINF-TERM',
+            'A43': 'CHRB-TERM'
         }
 
         for cell, title in titles.items():
@@ -192,6 +195,7 @@ class OnTimeReport(object):
             'HCIB-TERM': worksheet.cell(row=12+row_offset, column=column),
             'BUBM-TERM': worksheet.cell(row=13+row_offset, column=column),
             'RINF-TERM': worksheet.cell(row=14+row_offset, column=column),
+            'CHRB-TERM': worksheet.cell(row=15+row_offset, column=column)
         }
 
         for key, cell in report_column.iteritems():
@@ -204,10 +208,10 @@ class OnTimeReport(object):
         report_column[current_terminal].value = getattr(ontime_week, ontime_field)
 
     def excel_apply_styling(self, worksheet):
-        for spreadsheet_section in ['A', 3, 16, 29]:
+        for spreadsheet_section in ['A', 3, 17, 31]:
             for cell in worksheet[spreadsheet_section]:
                 cell.font = cell.font.copy(bold=True)
-        for spreadsheet_cell in ['A3', 'A16', 'A29']:
+        for spreadsheet_cell in ['A3', 'A17', 'A31']:
             worksheet[spreadsheet_cell].font = worksheet[spreadsheet_cell].font.copy(underline='single')
 
 def main():
