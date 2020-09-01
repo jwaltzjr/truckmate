@@ -5,10 +5,11 @@ from krc.database import DatabaseConnection
 truckmate = DatabaseConnection(
     '{IBM DB2 ODBC DRIVER - DB2COPY1}',
     'TM_Reporting_SVC_00001',
-    'STAY-DB201:50000',
     'STALEY',
     env.db_user.value,
-    env.db_password.value
+    env.db_password.value,
+    hostname='STAY-DB201',
+    port='50000'
 )
 
 if __name__ == '__main__':
