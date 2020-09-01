@@ -17,7 +17,7 @@ if __name__ == '__main__':
         print('Connected successfully')
         with db.connection.cursor() as cursor:
             print('Cursor opened')
-            cursor.execute('SELECT * FROM TLORDER FETCH FIRST ROW ONLY')
+            cursor.execute('SELECT * FROM TMWIN.TLORDER FETCH FIRST ROW ONLY')
             print('Cursor result:\n%s' % cursor.fetchall())
         print('Cursor commited or rolled back')
     print('Connection closed successfully')
